@@ -22,7 +22,7 @@ export const loginAdmin = asyncHandler(async (req, res) => {
         const cookieOptions = {
             httpOnly: true,
             secure: process.env.NODE_ENV !== 'development',
-            sameSite: 'strict',
+            sameSite: process.env.NODE_ENV !== 'development' ? 'none' : 'lax',
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
         };
 
