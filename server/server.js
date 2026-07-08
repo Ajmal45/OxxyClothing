@@ -1,23 +1,24 @@
-import 'dotenv/config';
 import http from 'http';
 import app from './app.js';
-import connectDB from './config/db.js';
-import { configureCloudinary } from './config/cloudinary.js';
 
 const PORT = process.env.PORT || 5000;
+
+// Create server using app
 const server = http.createServer(app);
 
-const startServer = async () => {
-    try {
-        await connectDB();
-        configureCloudinary();
-        server.listen(PORT, '0.0.0.0', () => {
-            console.log(`Server running on port ${PORT}`);
-        });
-    } catch (error) {
-        console.error(`Error starting server: ${error.message}`);
-        process.exit(1);
-    }
-};
+// Add diagnostic logging
+server.on('error', (err) => {
+    console.error('SERVER ERROR:', err.message, err.stack);
+});
 
-startServer();
+process.on('uncaughtException', (err) => {
+    console.error('UNCAUGHT:', err.message, err.stack);
+});
+
+process.on('unhandledRejection', (reason) => {
+    console.error('UNHANDLED:', reason);
+});
+
+server.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server running on port ${PORT}`);
+});
