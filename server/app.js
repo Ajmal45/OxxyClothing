@@ -30,7 +30,7 @@ app.use((req, res, next) => {
 });
 
 // Security Middlewares
-app.use(helmet());
+// helmet() temporarily removed for debugging — was crashing on first request
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Credentials', 'true');
