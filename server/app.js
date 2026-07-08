@@ -1,7 +1,7 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { existsSync } from 'fs';
 import express from 'express';
-import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
@@ -25,23 +25,14 @@ const app = express();
 
 // Security Middlewares
 app.use(helmet());
-app.use(cors({
-    origin: (origin, callback) => {
-        const allowed = [
-            process.env.FRONTEND_URL,
-            'http://localhost:5173',
-            'http://localhost:3000',
-        ].filter(Boolean);
-        if (!origin || allowed.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(null, true);
-        }
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-}));
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,PATCH');
+    res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+    if (req.method === 'OPTIONS') return res.sendStatus(204);
+    next();
+});
 
 // Rate limiting
 const limiter = rateLimit({
@@ -77,7 +68,6 @@ app.use('/api', publicRoutes);
 app.use('/api', analyticsRoutes);
 
 // Serve client build in production (when server and client are co-located)
-import { existsSync } from 'fs';
 const clientDist = path.join(__dirname, '..', 'client', 'dist');
 if (existsSync(clientDist)) {
     app.use(express.static(clientDist));
