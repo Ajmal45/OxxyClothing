@@ -57,7 +57,11 @@ app.use(compression());
 // Serve uploaded files (local fallback when Cloudinary not configured)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Health Check
+// Root + Health Check (Render pings / for health check)
+app.get('/', (req, res) => {
+    res.status(200).json({ status: 'OK', message: 'OXXY API is running' });
+});
+
 app.get('/health', (req, res) => {
     res.status(200).json({ status: 'OK', timestamp: new Date() });
 });
