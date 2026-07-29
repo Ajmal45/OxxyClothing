@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Plus, Trash2, AlertCircle, CheckCircle } from 'lucide-react';
 import { Button, Input, Toggle, Badge } from './ui';
 
-const EMPTY_VARIANT = { size: '', color: '', stock: 0, sku: '', isActive: true };
+const EMPTY_VARIANT = { size: '', color: '', stock: 1, sku: '', isActive: true };
 
 const VariantEditor = ({ variants, onChange }) => {
     const [newVariant, setNewVariant] = useState(EMPTY_VARIANT);
