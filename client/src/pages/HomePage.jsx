@@ -25,11 +25,9 @@ const HomePage = () => {
         });
     }, [data]);
 
-    if (hpLoading) return <HeroSkeleton />;
-
     return (
             <>
-            <HeroSection data={data} />
+            {hpLoading ? <HeroSkeleton /> : <HeroSection data={data} />}
             <ScrollReveal>
                 <BrandStatement data={data} />
             </ScrollReveal>
