@@ -1,6 +1,7 @@
 import joi from 'joi';
 
 const variantSchema = joi.object({
+    _id: joi.string().allow(null).optional(),
     size: joi.string().required().trim(),
     color: joi.string().required().trim(),
     stock: joi.number().integer().min(0).default(0),
@@ -9,6 +10,7 @@ const variantSchema = joi.object({
 });
 
 const imageSchema = joi.object({
+    _id: joi.string().allow(null).optional(),
     url: joi.string().uri().required(),
     publicId: joi.string().required(),
     altText: joi.string().allow('', null).trim(),
@@ -35,6 +37,7 @@ export const createProductSchema = joi.object({
 
 export const updateProductSchema = joi.object({
     name: joi.string().trim(),
+    slug: joi.string().trim(),
     productCode: joi.string().trim(),
     description: joi.string().trim(),
     price: joi.number().min(0),

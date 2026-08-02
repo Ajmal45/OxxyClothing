@@ -185,6 +185,15 @@ const seedData = async () => {
         ]);
         console.log(`Created ${products.length} products.`);
 
+        // Fix isAvailable — insertMany bypasses pre('save') hooks
+        for (const product of products) {
+            const hasStock = product.variants?.some(v => v.isActive && v.stock > 0);
+            if (hasStock !== product.isAvailable) {
+                await Product.findByIdAndUpdate(product._id, { isAvailable: !!hasStock });
+            }
+        }
+        console.log('Updated availability for seeded products.');
+
         // Homepage
         await HomepageContent.create({
             heroHeading: 'Defining Modern Elegance',
