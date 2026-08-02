@@ -1,17 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Manrope", system-ui, sans-serif;
-  --font-serif: "Bodoni Moda", Georgia, serif;
+  --font-sans: "Montserrat", system-ui, sans-serif;
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-editorial: "Cormorant Garamond", Georgia, serif;
 
-  --color-oxxy-black: #050505;
-  --color-oxxy-dark: #0A0A0A;
-  --color-oxxy-gray: #111111;
-  --color-oxxy-white: #FFFFFF;
-  --color-oxxy-light: #F5F5F5;
-  --color-oxxy-muted: #A3A3A3;
-  --color-oxxy-overlay: rgba(255, 255, 255, 0.12);
-  --color-oxxy-gold: #C4A96A;
+  --color-oxxy-black: #1a1a1a;
+  --color-oxxy-dark: #292521;
+  --color-oxxy-gray: #5f584f;
+  --color-oxxy-white: #faf8f5;
+  --color-oxxy-light: #e8e1d7;
+  --color-oxxy-muted: #746d63;
+  --color-oxxy-overlay: rgba(255, 255, 255, 0.25);
+  --color-oxxy-gold: #c5a076;
 }
 
 @layer base {
@@ -30,6 +32,8 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+
+  .font-editorial { font-family: var(--font-editorial); }
 
   ::selection {
     background-color: var(--color-oxxy-black);

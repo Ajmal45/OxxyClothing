@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Sparkles, Leaf, Shirt } from 'lucide-react';
 import useGsapAnimation from '../../../hooks/useGsapAnimation';
+import defaultHero from '../../../assets/hero.png';
 
 const HeroSection = ({ data }) => {
     const heroMedia = data?.heroMedia;
@@ -29,7 +30,7 @@ const HeroSection = ({ data }) => {
     ];
 
     return (
-        <section ref={sectionRef} className="relative h-screen w-full overflow-hidden">
+        <section ref={sectionRef} className="relative min-h-[760px] h-screen w-full overflow-hidden bg-oxxy-light">
             {isVideo ? (
                 <video
                     autoPlay
@@ -44,14 +45,19 @@ const HeroSection = ({ data }) => {
             ) : (
                 <div
                     className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                    style={{ backgroundImage: heroMedia?.url ? `url(${heroMedia.url})` : undefined }}
+                    style={{ backgroundImage: `url(${heroMedia?.url || defaultHero})` }}
                 />
             )}
 
-            <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-black/10 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#e8e1d7]/95 via-[#e8e1d7]/70 to-transparent" />
+            <div className="absolute hidden lg:block right-[10%] top-[12%] h-[66%] w-[32%] rounded-t-[18rem] border border-oxxy-gold/60 bg-oxxy-white/10" />
 
             <div className="relative z-10 h-full flex flex-col justify-center px-8 sm:px-12 lg:px-20 xl:px-28">
                 <div className="max-w-2xl">
+                    <div data-animate className="mb-7 flex items-center gap-3 text-oxxy-gold">
+                        <span className="grid h-9 w-9 place-items-center rounded-full border border-current font-serif text-lg">O</span>
+                        <span className="text-[10px] font-semibold tracking-[0.32em] uppercase">The OXXY Edit</span>
+                    </div>
                     <p data-animate className="text-xs sm:text-sm font-semibold tracking-[0.35em] uppercase text-oxxy-black/70 mb-4">
                         {data?.heroSubtitle || 'Elevate Your Style'}
                     </p>
@@ -63,14 +69,14 @@ const HeroSection = ({ data }) => {
                         {'Redefined'}
                     </h1>
 
-                    <p data-animate className="mt-6 text-base md:text-lg text-oxxy-black/60 max-w-md leading-relaxed">
+                    <p data-animate className="mt-6 text-xl md:text-2xl font-editorial text-oxxy-black/70 max-w-md leading-relaxed">
                         Timeless fashion crafted for the modern woman.
                     </p>
 
                     <div data-animate className="mt-8">
                         <Link
                             to={data?.heroCTALink || '/collections'}
-                            className="inline-block px-8 py-4 bg-oxxy-black text-oxxy-white text-sm font-semibold tracking-[0.2em] uppercase hover:bg-oxxy-dark transition-colors"
+                            className="inline-block px-8 py-4 bg-oxxy-black text-oxxy-white text-[11px] font-semibold tracking-[0.2em] uppercase hover:bg-oxxy-gold transition-colors"
                         >
                             {data?.heroCTA || 'Explore Collection'}
                         </Link>
@@ -78,7 +84,7 @@ const HeroSection = ({ data }) => {
                 </div>
             </div>
 
-            <div className="absolute bottom-0 left-0 right-0 z-10 bg-oxxy-black/80 backdrop-blur-sm">
+            <div className="absolute bottom-0 left-0 right-0 z-10 border-t border-white/35 bg-[#1a1a1a]/75 backdrop-blur-md">
                 <div className="max-w-7xl mx-auto px-8 py-5 flex items-center justify-center gap-12 sm:gap-20">
                     {features.map((feat, i) => (
                         <div key={i} data-animate className="flex flex-col items-center gap-2 text-center">
