@@ -1,28 +1,32 @@
 import { Link } from 'react-router-dom';
-import { ArrowDown, MessageCircle } from 'lucide-react';
+import { Sparkles, Leaf, Shirt } from 'lucide-react';
 import useGsapAnimation from '../../../hooks/useGsapAnimation';
-import useWhatsAppNumber from '../../../hooks/useWhatsAppNumber';
 
 const HeroSection = ({ data }) => {
     const heroMedia = data?.heroMedia;
     const isVideo = heroMedia?.type === 'video';
-    const { url: whatsappUrl } = useWhatsAppNumber();
 
     const sectionRef = useGsapAnimation((el, gsap) => {
         const children = el.querySelectorAll('[data-animate]');
         if (children.length === 0) return;
         gsap.fromTo(children,
-            { y: 50, opacity: 0 },
+            { y: 40, opacity: 0 },
             {
                 y: 0,
                 opacity: 1,
-                duration: 1,
-                stagger: 0.2,
+                duration: 0.9,
+                stagger: 0.15,
                 ease: 'power3.out',
-                delay: 0.3,
+                delay: 0.2,
             }
         );
     }, []);
+
+    const features = [
+        { icon: Sparkles, label: 'Premium\nQuality' },
+        { icon: Leaf, label: 'Stylish\nDesigns' },
+        { icon: Shirt, label: "Complete\nWomen's Wear" },
+    ];
 
     return (
         <section ref={sectionRef} className="relative h-screen w-full overflow-hidden">
@@ -39,46 +43,52 @@ const HeroSection = ({ data }) => {
                 </video>
             ) : (
                 <div
-                    className="absolute inset-0 bg-cover bg-center"
+                    className="absolute inset-0 bg-cover bg-center bg-no-repeat"
                     style={{ backgroundImage: heroMedia?.url ? `url(${heroMedia.url})` : undefined }}
                 />
             )}
 
-            <div className="absolute inset-0 bg-oxxy-black/50" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-black/10 to-transparent" />
 
-            <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-5">
-                <p data-animate className="text-xs lg:text-sm font-semibold tracking-[0.3em] uppercase text-white/80 mb-6">
-                    OXXY
-                </p>
-                <h1 data-animate className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-serif text-oxxy-white leading-tight max-w-4xl">
-                    {data?.heroHeading || 'Complete Women Store'}
-                </h1>
-                {data?.heroSubtitle && (
-                    <p data-animate className="mt-6 text-base md:text-lg text-white/70 max-w-xl leading-relaxed">
-                        {data.heroSubtitle}
+            <div className="relative z-10 h-full flex flex-col justify-center px-8 sm:px-12 lg:px-20 xl:px-28">
+                <div className="max-w-2xl">
+                    <p data-animate className="text-xs sm:text-sm font-semibold tracking-[0.35em] uppercase text-oxxy-black/70 mb-4">
+                        {data?.heroSubtitle || 'Elevate Your Style'}
                     </p>
-                )}
-                <div data-animate className="mt-10 flex flex-col sm:flex-row items-center gap-4">
-                    <Link
-                        to={data?.heroCTALink || '/collections'}
-                        className="px-8 py-3.5 bg-oxxy-white text-oxxy-black text-sm font-semibold tracking-wider uppercase hover:bg-oxxy-light transition-colors"
-                    >
-                        {data?.heroCTA || 'Explore Collection'}
-                    </Link>
-                    <a
-                        href={whatsappUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 px-8 py-3.5 border border-white/30 text-oxxy-white text-sm font-semibold tracking-wider uppercase hover:bg-white/10 transition-colors"
-                    >
-                        <MessageCircle className="h-4 w-4" />
-                        Enquire
-                    </a>
+
+                    <h1 data-animate className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-serif text-oxxy-black leading-[0.95]">
+                        {(data?.heroHeading || 'Elegance')}{' '}
+                        <span className="text-oxxy-gold italic font-light">&amp;</span>
+                        <br />
+                        {'Redefined'}
+                    </h1>
+
+                    <p data-animate className="mt-6 text-base md:text-lg text-oxxy-black/60 max-w-md leading-relaxed">
+                        Timeless fashion crafted for the modern woman.
+                    </p>
+
+                    <div data-animate className="mt-8">
+                        <Link
+                            to={data?.heroCTALink || '/collections'}
+                            className="inline-block px-8 py-4 bg-oxxy-black text-oxxy-white text-sm font-semibold tracking-[0.2em] uppercase hover:bg-oxxy-dark transition-colors"
+                        >
+                            {data?.heroCTA || 'Explore Collection'}
+                        </Link>
+                    </div>
                 </div>
             </div>
 
-            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 animate-bounce">
-                <ArrowDown className="h-5 w-5 text-white/60" />
+            <div className="absolute bottom-0 left-0 right-0 z-10 bg-oxxy-black/80 backdrop-blur-sm">
+                <div className="max-w-7xl mx-auto px-8 py-5 flex items-center justify-center gap-12 sm:gap-20">
+                    {features.map((feat, i) => (
+                        <div key={i} data-animate className="flex flex-col items-center gap-2 text-center">
+                            <feat.icon className="h-5 w-5 text-oxxy-white/70" strokeWidth={1.5} />
+                            <span className="text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase text-oxxy-white/80 whitespace-pre-line leading-tight">
+                                {feat.label}
+                            </span>
+                        </div>
+                    ))}
+                </div>
             </div>
         </section>
     );

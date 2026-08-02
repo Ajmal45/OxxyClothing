@@ -1,21 +1,20 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, MessageCircle } from 'lucide-react';
+import { Menu, X, Search, User, ShoppingBag } from 'lucide-react';
 import MobileMenu from './MobileMenu';
-import useWhatsAppNumber from '../../../hooks/useWhatsAppNumber';
 
 const NAV_ITEMS = [
     { label: 'Home', path: '/' },
-    { label: 'Collections', path: '/collections' },
+    { label: 'Collection', path: '/collections' },
     { label: 'New Arrivals', path: '/new-arrivals' },
     { label: 'About Us', path: '/about' },
+    { label: 'Contact', path: '/contact' },
 ];
 
 const Navbar = ({ isHome }) => {
     const [scrolled, setScrolled] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
     const location = useLocation();
-    const { url: whatsappUrl } = useWhatsAppNumber();
 
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 60);
@@ -41,11 +40,16 @@ const Navbar = ({ isHome }) => {
             >
                 <div className="max-w-7xl mx-auto px-5 lg:px-8">
                     <div className="flex items-center justify-between h-[72px] lg:h-20">
-                        <Link to="/" className="flex items-center gap-2">
-                            <span className={`text-xl lg:text-2xl font-bold tracking-widest font-serif ${
+                        <Link to="/" className="flex items-center gap-2.5">
+                            <span className={`text-xl lg:text-2xl font-bold tracking-[0.25em] font-serif ${
                                 showSolid ? 'text-oxxy-white' : 'text-oxxy-white'
                             }`}>
                                 OXXY
+                            </span>
+                            <span className={`hidden sm:block text-[9px] tracking-[0.15em] uppercase ${
+                                showSolid ? 'text-oxxy-white/50' : 'text-white/50'
+                            }`}>
+                                Complete Women's Store
                             </span>
                         </Link>
 
@@ -54,7 +58,7 @@ const Navbar = ({ isHome }) => {
                                 <Link
                                     key={item.path}
                                     to={item.path}
-                                    className={`relative text-sm font-medium tracking-wider uppercase transition-colors duration-300 ${
+                                    className={`relative text-xs font-semibold tracking-[0.15em] uppercase transition-colors duration-300 ${
                                         location.pathname === item.path
                                             ? 'text-oxxy-white'
                                             : showSolid
@@ -68,28 +72,38 @@ const Navbar = ({ isHome }) => {
                                     )}
                                 </Link>
                             ))}
-                            <a
-                                href={whatsappUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className={`flex items-center gap-2 px-5 py-2.5 text-sm font-semibold tracking-wider uppercase transition-all duration-300 ${
-                                    showSolid
-                                        ? 'bg-oxxy-white text-oxxy-black hover:bg-oxxy-light'
-                                        : 'bg-white text-oxxy-black hover:bg-oxxy-light'
-                                }`}
-                            >
-                                <MessageCircle className="h-4 w-4" />
-                                WhatsApp
-                            </a>
                         </div>
 
-                        <button
-                            onClick={() => setMobileOpen(true)}
-                            className={`lg:hidden p-2 ${showSolid ? 'text-oxxy-white' : 'text-white'}`}
-                            aria-label="Open menu"
-                        >
-                            <Menu className="h-6 w-6" />
-                        </button>
+                        <div className="flex items-center gap-4">
+                            <button
+                                className={`p-2 transition-colors ${showSolid ? 'text-oxxy-white/70 hover:text-oxxy-white' : 'text-white/70 hover:text-white'}`}
+                                aria-label="Search"
+                            >
+                                <Search className="h-5 w-5" strokeWidth={1.5} />
+                            </button>
+                            <Link
+                                to="/account"
+                                className={`p-2 transition-colors ${showSolid ? 'text-oxxy-white/70 hover:text-oxxy-white' : 'text-white/70 hover:text-white'}`}
+                                aria-label="Account"
+                            >
+                                <User className="h-5 w-5" strokeWidth={1.5} />
+                            </Link>
+                            <Link
+                                to="/cart"
+                                className={`p-2 transition-colors ${showSolid ? 'text-oxxy-white/70 hover:text-oxxy-white' : 'text-white/70 hover:text-white'}`}
+                                aria-label="Cart"
+                            >
+                                <ShoppingBag className="h-5 w-5" strokeWidth={1.5} />
+                            </Link>
+
+                            <button
+                                onClick={() => setMobileOpen(true)}
+                                className={`lg:hidden p-2 ${showSolid ? 'text-oxxy-white' : 'text-white'}`}
+                                aria-label="Open menu"
+                            >
+                                <Menu className="h-6 w-6" />
+                            </button>
+                        </div>
                     </div>
                 </div>
             </nav>
