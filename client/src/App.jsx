@@ -3,16 +3,17 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { injectJsonLd, getOrganizationSchema, getWebsiteSchema } from './utils/jsonld';
 import { AuthProvider } from './context/AuthContext';
 import { ToastProvider } from './components/ui/Toast';
-import ProtectedRoute from './components/ProtectedRoute';
-import AdminLayout from './components/AdminLayout';
-import StorefrontLayout from './components/storefront/layout/StorefrontLayout';
-import { Spinner } from './components/ui';
+import { Spinner } from './components/ui/Spinner';
 
 const PageLoader = () => (
     <div className="flex h-64 items-center justify-center">
         <Spinner className="h-8 w-8 text-black" />
     </div>
 );
+
+const StorefrontLayout = lazy(() => import('./components/storefront/layout/StorefrontLayout'));
+const ProtectedRoute = lazy(() => import('./components/ProtectedRoute'));
+const AdminLayout = lazy(() => import('./components/AdminLayout'));
 
 const HomePage = lazy(() => import('./pages/HomePage'));
 const CollectionsPage = lazy(() => import('./pages/CollectionsPage'));

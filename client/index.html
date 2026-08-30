@@ -10,13 +10,43 @@
     <meta property="og:type" content="website" />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://oxxy.in/" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..12,400;0,6..12,500;0,6..12,600;0,6..12,700;1,6..12,400;1,6..12,500&family=Manrope:wght@300;400;500;600;700;800&display=swap" />
     <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..12,400;0,6..12,500;0,6..12,600;0,6..12,700;1,6..12,400;1,6..12,500&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
     <title>OXXY — Complete Women Store</title>
+
+    <style>
+      #splash-loader{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#fff;transition:opacity .5s ease}
+      #splash-loader.hide{opacity:0;pointer-events:none}
+      #splash-loader .logo{font-family:Georgia,'Times New Roman',serif;font-size:2.5rem;letter-spacing:.25em;color:#050505;opacity:0;animation:fadeUp .6s ease forwards}
+      #splash-loader .sub{font-family:system-ui,sans-serif;font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:#a3a3a3;margin-top:.75rem;opacity:0;animation:fadeUp .6s ease .2s forwards}
+      #splash-loader .bar{width:8rem;height:1px;background:#e5e5e5;margin-top:2rem;overflow:hidden;opacity:0;animation:fadeUp .6s ease .3s forwards}
+      #splash-loader .bar::after{content:'';display:block;width:100%;height:100%;background:#050505;transform-origin:left;animation:barGrow 1.8s ease .5s forwards;transform:scaleX(0)}
+      @keyframes fadeUp{to{opacity:1}}
+      @keyframes barGrow{to{transform:scaleX(1)}}
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div id="splash-loader">
+        <span class="logo">OXXY</span>
+        <span class="sub">Complete Women Store</span>
+        <div class="bar"></div>
+      </div>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
+    <script>
+      window.__removeSplash = function() {
+        var el = document.getElementById('splash-loader');
+        if (el) {
+          el.classList.add('hide');
+          setTimeout(function() { el.remove(); }, 600);
+        }
+      };
+      setTimeout(function() { window.__removeSplash(); }, 4000);
+    </script>
   </body>
 </html>
