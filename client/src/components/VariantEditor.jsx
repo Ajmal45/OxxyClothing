@@ -8,6 +8,7 @@ const EMPTY_COLOR = {
     color: '',
     colorCode: '#000000',
     size: '',
+    thumbnailImage: null,
     images: [],
     price: '',
     stock: 1,
@@ -69,9 +70,10 @@ const VariantImageCard = ({ img, index, onRemove }) => (
     </div>
 );
 
-const ColorVariantCard = ({ variant, index, onChange, onRemove, onImageUpload, isUploading }) => {
+const ColorVariantCard = ({ variant, index, onChange, onRemove, onImageUpload, onThumbnailUpload, isUploading, isThumbnailUploading }) => {
     const [expanded, setExpanded] = useState(true);
     const fileInputRef = useRef(null);
+    const thumbInputRef = useRef(null);
     const { toast } = useToast();
 
     const update = (field, value) => {
@@ -85,9 +87,19 @@ const ColorVariantCard = ({ variant, index, onChange, onRemove, onImageUpload, i
         onImageUpload(index, validFiles);
     };
 
+    const handleThumbFile = async (files) => {
+        const validFiles = Array.from(files).filter((f) => f.type.startsWith('image/'));
+        if (validFiles.length === 0) return;
+        onThumbnailUpload(index, validFiles[0]);
+    };
+
     const removeImage = (imgIndex) => {
         const updated = variant.images.filter((_, i) => i !== imgIndex);
         update('images', updated);
+    };
+
+    const removeThumbnail = () => {
+        update('thumbnailImage', null);
     };
 
     const isWhite = variant.colorCode?.toUpperCase() === '#FFFFFF';
@@ -99,7 +111,15 @@ const ColorVariantCard = ({ variant, index, onChange, onRemove, onImageUpload, i
                 className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors"
                 onClick={() => setExpanded(!expanded)}
             >
-                <ColorSwatch code={variant.colorCode} selected={false} size="w-8 h-8" />
+                {variant.thumbnailImage ? (
+                    <img
+                        src={variant.thumbnailImage.url}
+                        alt={variant.color}
+                        className="w-10 h-12 object-cover rounded border border-gray-200 flex-shrink-0"
+                    />
+                ) : (
+                    <ColorSwatch code={variant.colorCode} selected={false} size="w-8 h-8" />
+                )}
                 <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold text-gray-900 truncate">
                         {variant.color || 'New Color'}
@@ -180,6 +200,58 @@ const ColorVariantCard = ({ variant, index, onChange, onRemove, onImageUpload, i
                                     size="w-6 h-6"
                                 />
                             ))}
+                        </div>
+                    </div>
+
+                    {/* Thumbnail Image (for color selector) */}
+                    <div>
+                        <label className="block text-xs font-medium text-gray-500 mb-1">
+                            Colour Thumbnail <span className="text-gray-400 font-normal">(shown in color selector)</span>
+                        </label>
+                        <div className="flex items-start gap-3">
+                            {variant.thumbnailImage ? (
+                                <div className="relative group flex-shrink-0">
+                                    <img
+                                        src={variant.thumbnailImage.url}
+                                        alt={`${variant.color} thumbnail`}
+                                        className="h-24 w-20 object-cover rounded-lg bg-gray-100 border border-gray-200"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={removeThumbnail}
+                                        className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                                        aria-label="Remove thumbnail"
+                                    >
+                                        <X className="h-3 w-3" />
+                                    </button>
+                                    <span className="absolute bottom-0.5 left-0.5 text-[9px] font-medium bg-black/70 text-white px-1 rounded">
+                                        Thumbnail
+                                    </span>
+                                </div>
+                            ) : (
+                                <div
+                                    onDrop={(e) => { e.preventDefault(); handleThumbFile(e.dataTransfer.files); }}
+                                    onDragOver={(e) => e.preventDefault()}
+                                    onClick={() => thumbInputRef.current?.click()}
+                                    className="h-24 w-20 border border-dashed border-gray-200 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-gray-400 hover:bg-gray-50 transition-colors"
+                                >
+                                    <input
+                                        ref={thumbInputRef}
+                                        type="file"
+                                        accept="image/*"
+                                        className="sr-only"
+                                        onChange={(e) => handleThumbFile(e.target.files)}
+                                    />
+                                    {isThumbnailUploading ? (
+                                        <Loader className="h-4 w-4 animate-spin text-gray-400" />
+                                    ) : (
+                                        <>
+                                            <UploadCloud className="h-4 w-4 text-gray-300" />
+                                            <span className="text-[9px] text-gray-400 mt-0.5">Thumbnail</span>
+                                        </>
+                                    )}
+                                </div>
+                            )}
                         </div>
                     </div>
 
@@ -295,6 +367,7 @@ const VariantEditor = ({ variants, onChange, productPrice = 0 }) => {
     const [newColor, setNewColor] = useState(EMPTY_COLOR);
     const [addError, setAddError] = useState('');
     const [uploadingIndex, setUploadingIndex] = useState(null);
+    const [thumbUploadingIndex, setThumbUploadingIndex] = useState(null);
 
     const availableCount = variants.filter((v) => v.isActive && v.stock > 0).length;
     const outOfStockCount = variants.filter((v) => v.isActive && v.stock === 0).length;
@@ -369,6 +442,30 @@ const VariantEditor = ({ variants, onChange, productPrice = 0 }) => {
         }
     };
 
+    const handleThumbnailUpload = async (variantIndex, file) => {
+        setThumbUploadingIndex(variantIndex);
+        try {
+            const formData = new FormData();
+            formData.append('image', file);
+            const res = await imageService.upload(formData);
+            const thumbnailImage = {
+                url: res.data.data.url,
+                publicId: res.data.data.publicId,
+                width: res.data.data.width,
+                height: res.data.data.height,
+                altText: '',
+                displayOrder: 0,
+            };
+            const current = variants[variantIndex];
+            handleChange(variantIndex, { ...current, thumbnailImage });
+            toast({ message: `Thumbnail uploaded for ${current.color || 'color'}`, type: 'success' });
+        } catch (err) {
+            toast({ message: err?.response?.data?.message || 'Thumbnail upload failed', type: 'error' });
+        } finally {
+            setThumbUploadingIndex(null);
+        }
+    };
+
     return (
         <div className="space-y-4">
             {/* Summary */}
@@ -394,7 +491,9 @@ const VariantEditor = ({ variants, onChange, productPrice = 0 }) => {
                             onChange={handleChange}
                             onRemove={handleRemove}
                             onImageUpload={handleImageUpload}
+                            onThumbnailUpload={handleThumbnailUpload}
                             isUploading={uploadingIndex === i}
+                            isThumbnailUploading={thumbUploadingIndex === i}
                         />
                     ))}
                 </div>

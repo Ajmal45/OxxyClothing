@@ -218,6 +218,7 @@ const ProductDetailPage = () => {
                             selectedColor={selectedColor}
                             onSizeChange={setSelectedSize}
                             onColorChange={setSelectedColor}
+                            productPrice={product.price}
                         />
 
                         {selectedColor && !hasStock && colorVariants.length > 0 && (

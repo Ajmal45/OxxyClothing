@@ -13,6 +13,7 @@ const variantSchema = new mongoose.Schema({
     size: { type: String },
     color: { type: String, required: true },
     colorCode: { type: String },
+    thumbnailImage: imageSchema,
     images: [imageSchema],
     price: { type: Number, min: 0 },
     stock: { type: Number, required: true, min: 0, default: 0 },

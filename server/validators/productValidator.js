@@ -15,6 +15,7 @@ const variantSchema = joi.object({
     size: joi.string().allow('', null).trim().optional(),
     color: joi.string().required().trim(),
     colorCode: joi.string().allow('', null).trim().optional(),
+    thumbnailImage: imageSchema.optional().allow(null),
     images: joi.array().items(imageSchema).optional(),
     price: joi.number().min(0).optional().allow(null),
     stock: joi.number().integer().min(0).default(0),
