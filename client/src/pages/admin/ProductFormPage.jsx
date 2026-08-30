@@ -200,8 +200,8 @@ const ProductFormPage = () => {
                             <ImageUploader images={images} onChange={(imgs) => { setImages(imgs); setIsDirty(true); }} />
                         </FormSection>
 
-                        <FormSection title="Variants" description="Manage sizes, colors, and stock levels.">
-                            <VariantEditor variants={variants} onChange={(v) => { setVariants(v); setIsDirty(true); }} />
+                        <FormSection title="Colors & Variants" description="Manage color variants with images, stock, and pricing per color.">
+                            <VariantEditor variants={variants} onChange={(v) => { setVariants(v); setIsDirty(true); }} productPrice={watch('price') || 0} />
                         </FormSection>
 
                         <FormSection title="SEO" description="Search engine optimisation settings">

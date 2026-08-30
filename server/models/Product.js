@@ -1,13 +1,5 @@
 import mongoose from 'mongoose';
 
-const variantSchema = new mongoose.Schema({
-    size: { type: String, required: true },
-    color: { type: String, required: true },
-    stock: { type: Number, required: true, min: 0, default: 0 },
-    sku: { type: String },
-    isActive: { type: Boolean, default: true }
-}, { _id: true });
-
 const imageSchema = new mongoose.Schema({
     url: { type: String, required: true },
     publicId: { type: String, required: true },
@@ -15,6 +7,17 @@ const imageSchema = new mongoose.Schema({
     width: Number,
     height: Number,
     displayOrder: { type: Number, default: 0 }
+}, { _id: true });
+
+const variantSchema = new mongoose.Schema({
+    size: { type: String },
+    color: { type: String, required: true },
+    colorCode: { type: String },
+    images: [imageSchema],
+    price: { type: Number, min: 0 },
+    stock: { type: Number, required: true, min: 0, default: 0 },
+    sku: { type: String },
+    isActive: { type: Boolean, default: true }
 }, { _id: true });
 
 const productSchema = new mongoose.Schema({
@@ -37,14 +40,17 @@ const productSchema = new mongoose.Schema({
     deletedAt: { type: Date }
 }, { timestamps: true });
 
-// Ensure unique size-color combinations per product
+// Ensure unique variant combinations per product
 productSchema.pre('validate', function (next) {
     if (this.variants && this.variants.length > 0) {
         const uniqueVariants = new Set();
         for (const variant of this.variants) {
-            const key = `${variant.size}-${variant.color}`.toLowerCase();
+            const size = (variant.size || '').trim().toLowerCase();
+            const color = (variant.color || '').trim().toLowerCase();
+            const key = size ? `${size}-${color}` : color;
             if (uniqueVariants.has(key)) {
-                return next(new Error(`Duplicate variant: ${variant.size} - ${variant.color}`));
+                const label = size ? `${variant.size} - ${variant.color}` : variant.color;
+                return next(new Error(`Duplicate variant: ${label}`));
             }
             uniqueVariants.add(key);
         }

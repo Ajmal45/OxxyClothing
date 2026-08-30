@@ -40,21 +40,96 @@ const ProductDetailPage = () => {
         }
     }, [product]);
 
+    // Derive unique colors with their color codes
+    const uniqueColors = useMemo(() => {
+        if (!product?.variants) return [];
+        const active = product.variants.filter((v) => v.isActive);
+        const seen = new Set();
+        return active.reduce((acc, v) => {
+            const key = v.color?.trim().toLowerCase();
+            if (key && !seen.has(key)) {
+                seen.add(key);
+                acc.push({ name: v.color, code: v.colorCode || null });
+            }
+            return acc;
+        }, []);
+    }, [product]);
+
+    // Auto-select first color if only one exists
+    useEffect(() => {
+        if (uniqueColors.length === 1 && !selectedColor) {
+            setSelectedColor(uniqueColors[0].name);
+        }
+    }, [uniqueColors, selectedColor]);
+
+    // Get all variants for the selected color
+    const colorVariants = useMemo(() => {
+        if (!selectedColor || !product?.variants) return [];
+        return product.variants.filter(
+            (v) => v.isActive && v.color?.trim().toLowerCase() === selectedColor.trim().toLowerCase()
+        );
+    }, [product, selectedColor]);
+
+    // Derive sizes available for the selected color
+    const colorSizes = useMemo(() => {
+        return [...new Set(colorVariants.map((v) => v.size).filter(Boolean))];
+    }, [colorVariants]);
+
+    // Auto-select size if only one exists
+    useEffect(() => {
+        if (colorSizes.length === 1 && !selectedSize) {
+            setSelectedSize(colorSizes[0]);
+        } else if (colorSizes.length === 0) {
+            setSelectedSize(null);
+        }
+    }, [colorSizes, selectedSize]);
+
+    // Matched variant (exact size+color or just color)
     const matchedVariant = useMemo(() => {
-        if (!selectedSize || !selectedColor || !product?.variants) return null;
-        return product.variants.find(
-            (v) => v.size === selectedSize && v.color === selectedColor
-        ) || null;
+        if (!selectedColor || !product?.variants) return null;
+        const matches = product.variants.filter(
+            (v) => v.isActive && v.color?.trim().toLowerCase() === selectedColor.trim().toLowerCase()
+        );
+        if (selectedSize) {
+            return matches.find((v) => v.size === selectedSize) || null;
+        }
+        // If no size required, return first match or single match
+        return matches.length === 1 ? matches[0] : null;
     }, [product, selectedSize, selectedColor]);
 
+    // Determine which images to show: color variant images or product images
+    const displayImages = useMemo(() => {
+        if (selectedColor && colorVariants.length > 0) {
+            // Collect all images from variants of this color
+            const colorImages = colorVariants.flatMap((v) => v.images || []);
+            if (colorImages.length > 0) return colorImages;
+        }
+        return product?.images || [];
+    }, [selectedColor, colorVariants, product]);
+
+    // Determine the display price
+    const displayPrice = useMemo(() => {
+        if (matchedVariant?.price) return matchedVariant.price;
+        // If multiple color variants exist with same price, use that
+        if (colorVariants.length > 0 && colorVariants[0].price) {
+            const allSame = colorVariants.every((v) => v.price === colorVariants[0].price);
+            if (allSame) return colorVariants[0].price;
+        }
+        return product?.price;
+    }, [matchedVariant, colorVariants, product]);
+
+    // Stock for the selected color/variant
     const hasStock = matchedVariant ? matchedVariant.isActive && matchedVariant.stock > 0 : null;
+    const colorStock = colorVariants.reduce((sum, v) => sum + (v.isActive ? v.stock : 0), 0);
     const totalStock = product?.variants?.reduce((sum, v) => sum + (v.isActive ? v.stock : 0), 0) || 0;
 
-    const stockLabel = totalStock === 0 ? 'Out of Stock' :
-        totalStock <= 5 ? 'Only Few Left' : 'Available';
+    const effectiveStock = matchedVariant ? matchedVariant.stock : (selectedColor ? colorStock : totalStock);
 
-    const stockClass = totalStock === 0 ? 'text-red-500' :
-        totalStock <= 5 ? 'text-amber-600' : 'text-green-600';
+    const stockLabel = effectiveStock === 0 ? 'Out of Stock' :
+        effectiveStock <= 5 ? 'Only Few Left' : 'Available';
+
+    const stockClass = effectiveStock === 0 ? 'text-red-500' :
+        effectiveStock <= 5 ? 'text-amber-600' : 'text-green-600';
 
     const handleWhatsApp = async () => {
         if (!product) return;
@@ -87,8 +162,9 @@ const ProductDetailPage = () => {
         );
     }
 
-    const canEnquire = !selectedSize || !selectedColor || (hasStock === true);
-    const needsSelection = !selectedSize || !selectedColor;
+    const needsColorSelection = uniqueColors.length > 0 && !selectedColor;
+    const needsSizeSelection = colorSizes.length > 0 && !selectedSize;
+    const needsSelection = needsColorSelection || needsSizeSelection;
 
     return (
         <div className="pt-24 lg:pt-28 pb-20">
@@ -102,7 +178,7 @@ const ProductDetailPage = () => {
                 </Link>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
-                    <ProductImageGallery images={product.images} productName={product.name} />
+                    <ProductImageGallery images={displayImages} productName={product.name} />
 
                     <div className="flex flex-col">
                         <p className="text-xs text-oxxy-muted tracking-wider uppercase mb-2">
@@ -112,13 +188,21 @@ const ProductDetailPage = () => {
                             {product.name}
                         </h1>
                         <p className="text-2xl font-semibold mb-6">
-                            ₹{Number(product.price).toLocaleString('en-IN')}
+                            ₹{Number(displayPrice).toLocaleString('en-IN')}
+                            {displayPrice !== product.price && (
+                                <span className="text-sm text-oxxy-muted line-through ml-3 font-normal">
+                                    ₹{Number(product.price).toLocaleString('en-IN')}
+                                </span>
+                            )}
                         </p>
 
                         <div className="flex items-center gap-3 mb-6">
                             <span className={`text-sm font-medium ${stockClass}`}>
                                 <Check className="h-3.5 w-3.5 inline mr-1" />
                                 {stockLabel}
+                                {effectiveStock > 0 && effectiveStock <= 5 && (
+                                    <span className="ml-1 text-xs">({effectiveStock} left)</span>
+                                )}
                             </span>
                         </div>
 
@@ -136,7 +220,7 @@ const ProductDetailPage = () => {
                             onColorChange={setSelectedColor}
                         />
 
-                        {matchedVariant && !hasStock && (
+                        {selectedColor && !hasStock && colorVariants.length > 0 && (
                             <div className="flex items-center gap-2 mt-4 text-sm text-red-500">
                                 <AlertTriangle className="h-4 w-4" />
                                 This combination is currently unavailable.
@@ -174,11 +258,11 @@ const ProductDetailPage = () => {
                                 className="w-full flex items-center justify-center gap-3 px-8 py-4 bg-oxxy-black text-oxxy-white text-sm font-semibold tracking-wider uppercase hover:bg-oxxy-gray transition-colors disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed"
                             >
                                 <MessageCircle className="h-5 w-5" />
-                                {needsSelection ? 'Select Size & Color to Enquire' : 'Enquire on WhatsApp'}
+                                {needsSelection ? 'Select options to enquire' : 'Enquire on WhatsApp'}
                             </button>
                             {needsSelection && (
                                 <p className="text-xs text-oxxy-muted mt-2 text-center">
-                                    Please select size and color to enquire
+                                    {needsColorSelection ? 'Please select a color' : 'Please select a size'}
                                 </p>
                             )}
                         </div>

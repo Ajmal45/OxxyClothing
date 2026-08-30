@@ -1,8 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const ProductImageGallery = ({ images = [], productName }) => {
     const [selectedIndex, setSelectedIndex] = useState(0);
+
+    useEffect(() => {
+        setSelectedIndex(0);
+    }, [images]);
 
     const prev = () => setSelectedIndex((i) => (i > 0 ? i - 1 : images.length - 1));
     const next = () => setSelectedIndex((i) => (i < images.length - 1 ? i + 1 : 0));

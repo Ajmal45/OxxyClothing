@@ -1,14 +1,5 @@
 import joi from 'joi';
 
-const variantSchema = joi.object({
-    _id: joi.string().allow(null).optional(),
-    size: joi.string().required().trim(),
-    color: joi.string().required().trim(),
-    stock: joi.number().integer().min(0).default(0),
-    sku: joi.string().allow('', null).trim(),
-    isActive: joi.boolean().default(true)
-});
-
 const imageSchema = joi.object({
     _id: joi.string().allow(null).optional(),
     url: joi.string().uri().required(),
@@ -17,6 +8,18 @@ const imageSchema = joi.object({
     width: joi.number().integer().optional(),
     height: joi.number().integer().optional(),
     displayOrder: joi.number().integer().default(0)
+});
+
+const variantSchema = joi.object({
+    _id: joi.string().allow(null).optional(),
+    size: joi.string().allow('', null).trim().optional(),
+    color: joi.string().required().trim(),
+    colorCode: joi.string().allow('', null).trim().optional(),
+    images: joi.array().items(imageSchema).optional(),
+    price: joi.number().min(0).optional().allow(null),
+    stock: joi.number().integer().min(0).default(0),
+    sku: joi.string().allow('', null).trim(),
+    isActive: joi.boolean().default(true)
 });
 
 export const createProductSchema = joi.object({
