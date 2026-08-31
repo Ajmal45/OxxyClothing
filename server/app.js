@@ -23,11 +23,10 @@ import analyticsRoutes from './routes/analyticsRoutes.js';
 
 const app = express();
 
-const ALLOWED_ORIGIN = process.env.FRONTEND_URL || 'https://oxxyclothing.netlify.app';
-
+// CORS must be FIRST before helmet
 app.use((req, res, next) => {
     const origin = req.headers.origin;
-    if (origin && origin === ALLOWED_ORIGIN) {
+    if (origin) {
         res.header('Access-Control-Allow-Origin', origin);
     }
     res.header('Access-Control-Allow-Credentials', 'true');
@@ -37,7 +36,10 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(helmet());
+app.use(helmet({
+    crossOriginResourcePolicy: { policy: 'cross-origin' },
+    crossOriginEmbedderPolicy: false,
+}));
 app.use(compression());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
