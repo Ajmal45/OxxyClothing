@@ -28,6 +28,7 @@ export const AuthProvider = ({ children }) => {
         }
 
         const handleUnauthorized = () => {
+            localStorage.removeItem('oxxy_token');
             setUser(null);
             if (window.location.pathname.startsWith('/admin')) {
                 window.location.href = '/admin/login';
@@ -40,12 +41,16 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (email, password) => {
         const res = await api.post('/admin/auth/login', { email, password });
+        if (res.data?.data?.token) {
+            localStorage.setItem('oxxy_token', res.data.data.token);
+        }
         setUser(res.data.data);
         return res.data;
     };
 
     const logout = async () => {
-        await api.post('/admin/auth/logout');
+        try { await api.post('/admin/auth/logout'); } catch { /* ignore */ }
+        localStorage.removeItem('oxxy_token');
         setUser(null);
     };
 

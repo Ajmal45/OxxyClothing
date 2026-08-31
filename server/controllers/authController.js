@@ -18,11 +18,11 @@ export const loginAdmin = asyncHandler(async (req, res) => {
 
         const token = user.generateAccessToken();
 
-        // Set cookie
+        // Set cookie (SameSite=lax works for both same-origin proxy and is not blocked as third-party)
         const cookieOptions = {
             httpOnly: true,
             secure: process.env.NODE_ENV !== 'development',
-            sameSite: process.env.NODE_ENV !== 'development' ? 'none' : 'lax',
+            sameSite: 'lax',
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
         };
 
@@ -37,7 +37,8 @@ export const loginAdmin = asyncHandler(async (req, res) => {
                 _id: user._id,
                 name: user.name,
                 email: user.email,
-                role: user.role
+                role: user.role,
+                token
             }, 'Logged in successfully')
         );
     } else {
