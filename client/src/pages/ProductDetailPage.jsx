@@ -70,9 +70,15 @@ const ProductDetailPage = () => {
         );
     }, [product, selectedColor]);
 
-    // Derive sizes available for the selected color
+    // Derive sizes available for the selected color (case-insensitive dedup)
     const colorSizes = useMemo(() => {
-        return [...new Set(colorVariants.map((v) => v.size).filter(Boolean))];
+        const map = new Map();
+        colorVariants.forEach((v) => {
+            if (!v.size) return;
+            const key = v.size.trim().toLowerCase();
+            if (!map.has(key)) map.set(key, v.size);
+        });
+        return [...map.values()];
     }, [colorVariants]);
 
     // Auto-select size if only one exists
@@ -84,16 +90,15 @@ const ProductDetailPage = () => {
         }
     }, [colorSizes, selectedSize]);
 
-    // Matched variant (exact size+color or just color)
+    // Matched variant (case-insensitive for both size and color)
     const matchedVariant = useMemo(() => {
         if (!selectedColor || !product?.variants) return null;
         const matches = product.variants.filter(
             (v) => v.isActive && v.color?.trim().toLowerCase() === selectedColor.trim().toLowerCase()
         );
         if (selectedSize) {
-            return matches.find((v) => v.size === selectedSize) || null;
+            return matches.find((v) => (v.size || '').trim().toLowerCase() === selectedSize.trim().toLowerCase()) || null;
         }
-        // If no size required, return first match or single match
         return matches.length === 1 ? matches[0] : null;
     }, [product, selectedSize, selectedColor]);
 

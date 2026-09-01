@@ -3,7 +3,14 @@ import { useMemo } from 'react';
 const VariantSelector = ({ variants = [], selectedSize, selectedColor, onSizeChange, onColorChange, productPrice = 0 }) => {
     const { sizes, colorData } = useMemo(() => {
         const active = variants.filter((v) => v.isActive);
-        const uniqueSizes = [...new Set(active.map((v) => v.size).filter(Boolean))];
+        // Deduplicate sizes case-insensitively, keep first occurrence's original casing
+        const sizeMap = new Map();
+        active.forEach((v) => {
+            if (!v.size) return;
+            const key = v.size.trim().toLowerCase();
+            if (!sizeMap.has(key)) sizeMap.set(key, v.size);
+        });
+        const uniqueSizes = [...sizeMap.values()];
 
         // Group variants by color, pick first variant per color for thumbnail/price
         const colorMap = {};
@@ -14,9 +21,7 @@ const VariantSelector = ({ variants = [], selectedSize, selectedColor, onSizeCha
                     (av) => av.color?.trim().toLowerCase() === key
                 );
                 const totalStock = allForColor.reduce((s, av) => s + av.stock, 0);
-                // Pick thumbnail: thumbnailImage > first image from images[] > null
                 const thumb = v.thumbnailImage?.url || v.images?.[0]?.url || null;
-                // Pick price: first variant price with value, or null (use product price)
                 const priceVariant = allForColor.find((av) => av.price != null && av.price !== '');
                 colorMap[key] = {
                     name: v.color,
@@ -33,21 +38,32 @@ const VariantSelector = ({ variants = [], selectedSize, selectedColor, onSizeCha
 
     const colorKeys = Object.keys(colorData);
 
-    const availableColorsForSize = useMemo(() => {
-        if (!selectedSize) return colorKeys;
-        return variants
-            .filter((v) => v.isActive && v.size === selectedSize && v.stock > 0)
-            .map((v) => v.color?.trim().toLowerCase())
-            .filter((v, i, a) => a.indexOf(v) === i);
-    }, [variants, selectedSize, colorKeys]);
-
     const availableSizesForColor = useMemo(() => {
-        if (!selectedColor) return sizes;
+        if (!selectedColor) return sizes.map((s) => s.trim().toLowerCase());
         return variants
             .filter((v) => v.isActive && v.color?.trim().toLowerCase() === selectedColor.trim().toLowerCase() && v.stock > 0)
-            .map((v) => v.size)
+            .map((v) => v.size?.trim().toLowerCase())
+            .filter(Boolean)
             .filter((v, i, a) => a.indexOf(v) === i);
     }, [variants, selectedColor, sizes]);
+
+    const handleColorChange = (colorName) => {
+        const isSelected = selectedColor?.trim().toLowerCase() === colorName.trim().toLowerCase();
+        if (isSelected) {
+            onColorChange(null);
+        } else {
+            // If current size not available for new color, clear it so user can pick
+            const newColorKey = colorName.trim().toLowerCase();
+            const sizesForNewColor = variants
+                .filter((v) => v.isActive && v.color?.trim().toLowerCase() === newColorKey && v.stock > 0)
+                .map((v) => v.size?.trim().toLowerCase())
+                .filter(Boolean);
+            if (selectedSize && !sizesForNewColor.includes(selectedSize.trim().toLowerCase())) {
+                onSizeChange(null);
+            }
+            onColorChange(colorName);
+        }
+    };
 
     return (
         <div className="space-y-6">
@@ -59,24 +75,19 @@ const VariantSelector = ({ variants = [], selectedSize, selectedColor, onSizeCha
                     <div className="flex flex-wrap gap-3">
                         {colorKeys.map((key) => {
                             const data = colorData[key];
-                            const disabled = selectedSize && !availableColorsForSize.includes(key);
                             const isSelected = selectedColor?.trim().toLowerCase() === key;
                             const displayPrice = data.price || productPrice;
 
                             return (
                                 <button
                                     key={key}
-                                    disabled={disabled}
-                                    onClick={() => onColorChange(isSelected ? null : data.name)}
+                                    onClick={() => handleColorChange(data.name)}
                                     className={`flex flex-col items-center border-2 transition-all w-[90px] ${
                                         isSelected
                                             ? 'border-oxxy-black'
-                                            : disabled
-                                                ? 'border-gray-100 opacity-40 cursor-not-allowed'
-                                                : 'border-gray-200 hover:border-gray-400'
+                                            : 'border-gray-200 hover:border-gray-400'
                                     }`}
                                 >
-                                    {/* Thumbnail Image */}
                                     <div className="w-full aspect-[3/4] bg-gray-50 overflow-hidden">
                                         {data.thumbnail ? (
                                             <img
@@ -93,7 +104,6 @@ const VariantSelector = ({ variants = [], selectedSize, selectedColor, onSizeCha
                                             </div>
                                         )}
                                     </div>
-                                    {/* Price */}
                                     <div className="w-full px-1.5 py-2 text-center">
                                         <p className="text-xs font-semibold text-oxxy-black">
                                             ₹{Number(displayPrice).toLocaleString('en-IN')}
@@ -118,7 +128,7 @@ const VariantSelector = ({ variants = [], selectedSize, selectedColor, onSizeCha
                     </p>
                     <div className="flex flex-wrap gap-2">
                         {sizes.map((size) => {
-                            const disabled = selectedColor && !availableSizesForColor.includes(size);
+                            const disabled = selectedColor && !availableSizesForColor.includes(size.trim().toLowerCase());
                             return (
                                 <button
                                     key={size}

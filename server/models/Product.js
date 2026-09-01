@@ -23,8 +23,8 @@ const variantSchema = new mongoose.Schema({
 
 const productSchema = new mongoose.Schema({
     name: { type: String, required: true, trim: true },
-    slug: { type: String, required: true, unique: true, lowercase: true },
-    productCode: { type: String, required: true, unique: true },
+    slug: { type: String, required: true, lowercase: true },
+    productCode: { type: String, required: true },
     description: { type: String, required: true },
     price: { type: Number, required: true, min: 0 },
     category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
@@ -41,23 +41,7 @@ const productSchema = new mongoose.Schema({
     deletedAt: { type: Date }
 }, { timestamps: true });
 
-// Ensure unique variant combinations per product
-productSchema.pre('validate', function (next) {
-    if (this.variants && this.variants.length > 0) {
-        const uniqueVariants = new Set();
-        for (const variant of this.variants) {
-            const size = (variant.size || '').trim().toLowerCase();
-            const color = (variant.color || '').trim().toLowerCase();
-            const key = size ? `${size}-${color}` : color;
-            if (uniqueVariants.has(key)) {
-                const label = size ? `${variant.size} - ${variant.color}` : variant.color;
-                return next(new Error(`Duplicate variant: ${label}`));
-            }
-            uniqueVariants.add(key);
-        }
-    }
-    next();
-});
+
 
 // Auto-calculate availability before saving
 productSchema.pre('save', function (next) {

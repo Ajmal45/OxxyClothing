@@ -387,10 +387,6 @@ const VariantEditor = ({ variants, onChange, productPrice = 0 }) => {
             setAddError('Color name is required.');
             return;
         }
-        if (hasDuplicateColor(newColor.color, newColor.size)) {
-            setAddError(`Color "${newColor.color.trim()}"${newColor.size ? ` / ${newColor.size.trim()}` : ''} already exists.`);
-            return;
-        }
         if (Number(newColor.stock) < 0) {
             setAddError('Stock must be 0 or more.');
             return;

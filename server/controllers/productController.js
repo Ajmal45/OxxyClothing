@@ -93,7 +93,7 @@ export const getAdminProductById = asyncHandler(async (req, res) => {
 export const createProduct = asyncHandler(async (req, res) => {
     const { name, productCode } = req.body;
 
-    const codeExists = await Product.findOne({ productCode });
+    const codeExists = await Product.findOne({ productCode, isDeleted: false });
     if (codeExists) {
         throw new ApiError(400, 'Product code already exists');
     }
@@ -101,7 +101,7 @@ export const createProduct = asyncHandler(async (req, res) => {
     const slug = slugify(name, { lower: true, strict: true });
 
     // Validate duplicate slug
-    const slugExists = await Product.findOne({ slug });
+    const slugExists = await Product.findOne({ slug, isDeleted: false });
     if (slugExists) {
         throw new ApiError(400, 'Product with this name results in a duplicate slug. Please use a unique name.');
     }
@@ -126,7 +126,7 @@ export const updateProduct = asyncHandler(async (req, res) => {
     }
 
     if (productCode && productCode !== product.productCode) {
-        const codeExists = await Product.findOne({ productCode, _id: { $ne: product._id } });
+        const codeExists = await Product.findOne({ productCode, isDeleted: false, _id: { $ne: product._id } });
         if (codeExists) {
             throw new ApiError(400, 'Product code already exists');
         }
@@ -134,7 +134,7 @@ export const updateProduct = asyncHandler(async (req, res) => {
 
     if (name && name !== product.name) {
         req.body.slug = slugify(name, { lower: true, strict: true });
-        const slugExists = await Product.findOne({ slug: req.body.slug, _id: { $ne: product._id } });
+        const slugExists = await Product.findOne({ slug: req.body.slug, isDeleted: false, _id: { $ne: product._id } });
         if (slugExists) {
             throw new ApiError(400, 'Product name results in a duplicate slug');
         }

@@ -17,6 +17,15 @@ const startServer = async () => {
     try {
         await connectDB();
         configureCloudinary();
+        // Drop old unique indexes that block saving with soft-deleted duplicates
+        try {
+            const { Product } = await import('./models/Product.js');
+            for (const idx of ['slug_1', 'productCode_1']) {
+                try { await Product.collection.dropIndex(idx); console.log(`Dropped old index ${idx}`); } catch {}
+            }
+            // Ensure new non-unique indexes
+            await Product.syncIndexes();
+        } catch {}
         app.listen(PORT, () => {
             console.log(`Server running on port ${PORT}`);
         });
