@@ -2,26 +2,31 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { storefrontService } from '../../../services/storefrontService';
+import useInViewOnce from '../../../hooks/useInViewOnce';
+import { optimizeImageUrl } from '../../../utils/image';
 import { SectionSkeleton } from '../ui/Skeleton';
 import SectionHeading from '../ui/SectionHeading';
 
 const CollectionShowcase = () => {
     const [collections, setCollections] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [ref, inView] = useInViewOnce();
 
     useEffect(() => {
+        if (!inView) return;
         let cancelled = false;
         storefrontService.getCollections()
             .then((res) => { if (!cancelled) setCollections(res.data.data || []); })
             .catch(() => {})
             .finally(() => { if (!cancelled) setLoading(false); });
         return () => { cancelled = true; };
-    }, []);
+    }, [inView]);
 
+    if (!inView) return <section ref={ref} className="py-20 lg:py-28 px-5"><div className="h-40" /></section>;
     if (!loading && collections.length === 0) return null;
 
     return (
-        <section className="py-20 lg:py-28 px-5">
+        <section ref={ref} className="py-20 lg:py-28 px-5">
             <div className="max-w-7xl mx-auto">
                 <SectionHeading
                     label="Collections"
@@ -41,10 +46,14 @@ const CollectionShowcase = () => {
                             >
                                 {col.coverImage?.url ? (
                                     <img
-                                        src={col.coverImage.url}
+                                        src={optimizeImageUrl(col.coverImage.url, 700)}
                                         alt={col.coverImage.altText || col.name}
+                                        width="700"
+                                        height="875"
+                                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                                         loading="lazy"
+                                        decoding="async"
                                     />
                                 ) : (
                                     <div className="w-full h-full flex items-center justify-center bg-oxxy-black">

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
+import { optimizeImageUrl } from '../../../utils/image';
 
 const CampaignSection = ({ data }) => {
     if (!data?.campaignImage?.url && !data?.campaignHeading) return null;
@@ -9,10 +10,14 @@ const CampaignSection = ({ data }) => {
             {data?.campaignImage?.url && (
                 <div className="absolute inset-0">
                     <img
-                        src={data.campaignImage.url}
+                        src={optimizeImageUrl(data.campaignImage.url, 1400)}
                         alt={data.campaignHeading || 'Campaign'}
+                        width="1400"
+                        height="800"
+                        sizes="100vw"
                         className="w-full h-full object-cover"
                         loading="lazy"
+                        decoding="async"
                     />
                     <div className="absolute inset-0 bg-oxxy-black/40" />
                 </div>

@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -34,6 +33,40 @@
   }
 
   .font-editorial { font-family: var(--font-editorial); }
+
+  /* Lightweight entrance (CSS-only, no JS wait — keeps LCP text visible) */
+  .hero-entrance > * {
+    animation: hero-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .hero-entrance > *:nth-child(2) { animation-delay: 0.08s; }
+  .hero-entrance > *:nth-child(3) { animation-delay: 0.16s; }
+  .hero-entrance > *:nth-child(4) { animation-delay: 0.24s; }
+  .hero-entrance > *:nth-child(5) { animation-delay: 0.32s; }
+  @keyframes hero-rise {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Scroll reveal (IntersectionObserver-driven, zero JS animation libs) */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Route fade (replaces framer-motion page transition) */
+  .route-fade {
+    animation: route-in 0.25s ease both;
+  }
+  @keyframes route-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
 
   ::selection {
     background-color: var(--color-oxxy-black);

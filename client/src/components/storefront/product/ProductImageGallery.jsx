@@ -25,6 +25,10 @@ const ProductImageGallery = ({ images = [], productName }) => {
                 <img
                     src={images[selectedIndex]?.url}
                     alt={images[selectedIndex]?.altText || `${productName} - Image ${selectedIndex + 1}`}
+                    width="900"
+                    height="1125"
+                    fetchpriority="high"
+                    decoding="async"
                     className="w-full h-full object-cover"
                 />
                 {images.length > 1 && (
@@ -72,8 +76,11 @@ const ProductImageGallery = ({ images = [], productName }) => {
                             <img
                                 src={img.url}
                                 alt={img.altText || `${productName} thumbnail ${i + 1}`}
+                                width="128"
+                                height="160"
                                 className="w-full h-full object-cover"
                                 loading="lazy"
+                                decoding="async"
                             />
                         </button>
                     ))}

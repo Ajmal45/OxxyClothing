@@ -1,15 +1,8 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-import { AnimatePresence, motion } from 'framer-motion';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import BottomNav from './BottomNav';
-
-const pageVariants = {
-    initial: { opacity: 0 },
-    animate: { opacity: 1, transition: { duration: 0.3, ease: [0.25, 0.1, 0.25, 1] } },
-    exit: { opacity: 0, transition: { duration: 0.2 } },
-};
 
 const StorefrontLayout = () => {
     const location = useLocation();
@@ -34,17 +27,9 @@ const StorefrontLayout = () => {
             <div className="min-h-screen bg-oxxy-white text-oxxy-black">
                 <Navbar isHome={isHome} />
                 <main id="main-content">
-                    <AnimatePresence mode="wait">
-                        <motion.div
-                            key={location.pathname}
-                            variants={pageVariants}
-                            initial="initial"
-                            animate="animate"
-                            exit="exit"
-                        >
-                            <Outlet />
-                        </motion.div>
-                    </AnimatePresence>
+                    <div key={location.pathname} className="route-fade">
+                        <Outlet />
+                    </div>
                 </main>
                 <Footer />
                 <BottomNav />

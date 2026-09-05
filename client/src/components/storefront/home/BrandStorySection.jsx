@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
+import { optimizeImageUrl } from '../../../utils/image';
 
 const BrandStorySection = ({ data }) => {
     if (!data?.brandStoryHeading && !data?.brandStoryText) return null;
@@ -28,10 +29,14 @@ const BrandStorySection = ({ data }) => {
                 {data?.brandStoryImage?.url && (
                     <div className="relative h-[400px] lg:h-[550px] overflow-hidden">
                         <img
-                            src={data.brandStoryImage.url}
+                            src={optimizeImageUrl(data.brandStoryImage.url, 900)}
                             alt={data.brandStoryImage.altText || 'Brand story'}
+                            width="900"
+                            height="1100"
+                            sizes="(max-width: 1024px) 100vw, 50vw"
                             className="w-full h-full object-cover"
                             loading="lazy"
+                            decoding="async"
                         />
                     </div>
                 )}

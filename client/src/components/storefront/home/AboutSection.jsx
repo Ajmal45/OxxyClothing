@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
+import { optimizeImageUrl } from '../../../utils/image';
 
 const AboutSection = ({ data }) => {
     if (!data?.aboutText && !data?.aboutImage?.url) return null;
@@ -10,10 +11,14 @@ const AboutSection = ({ data }) => {
                 {data?.aboutImage?.url && (
                     <div className="relative h-[350px] lg:h-[500px] overflow-hidden order-2 lg:order-1">
                         <img
-                            src={data.aboutImage.url}
+                            src={optimizeImageUrl(data.aboutImage.url, 900)}
                             alt="About OXXY"
+                            width="900"
+                            height="1000"
+                            sizes="(max-width: 1024px) 100vw, 50vw"
                             className="w-full h-full object-cover"
                             loading="lazy"
+                            decoding="async"
                         />
                     </div>
                 )}

@@ -1,27 +1,12 @@
 import { Link } from 'react-router-dom';
 import { Sparkles, Leaf, Shirt } from 'lucide-react';
-import useGsapAnimation from '../../../hooks/useGsapAnimation';
+import { optimizeImageUrl } from '../../../utils/image';
 import defaultHero from '../../../assets/hero.png';
 
 const HeroSection = ({ data }) => {
     const heroMedia = data?.heroMedia;
     const isVideo = heroMedia?.type === 'video';
-
-    const sectionRef = useGsapAnimation((el, gsap) => {
-        const children = el.querySelectorAll('[data-animate]');
-        if (children.length === 0) return;
-        gsap.fromTo(children,
-            { y: 40, opacity: 0 },
-            {
-                y: 0,
-                opacity: 1,
-                duration: 0.9,
-                stagger: 0.15,
-                ease: 'power3.out',
-                delay: 0.2,
-            }
-        );
-    }, []);
+    const heroSrc = heroMedia?.url || defaultHero;
 
     const features = [
         { icon: Sparkles, label: 'Premium\nQuality' },
@@ -30,22 +15,28 @@ const HeroSection = ({ data }) => {
     ];
 
     return (
-        <section ref={sectionRef} className="relative min-h-[760px] h-screen w-full overflow-hidden bg-oxxy-light">
+        <section className="relative min-h-[760px] h-screen w-full overflow-hidden bg-oxxy-light">
             {isVideo ? (
                 <video
                     autoPlay
                     muted
                     loop
                     playsInline
-                    poster={heroMedia?.url}
+                    preload="metadata"
+                    poster={optimizeImageUrl(heroMedia?.url, 1200)}
                     className="absolute inset-0 w-full h-full object-cover"
                 >
                     <source src={heroMedia?.url} type="video/mp4" />
                 </video>
             ) : (
-                <div
-                    className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                    style={{ backgroundImage: `url(${heroMedia?.url || defaultHero})` }}
+                <img
+                    src={optimizeImageUrl(heroSrc, 1600)}
+                    alt=""
+                    aria-hidden="true"
+                    fetchpriority="high"
+                    decoding="async"
+                    draggable={false}
+                    className="absolute inset-0 w-full h-full object-cover object-center"
                 />
             )}
 
@@ -53,27 +44,27 @@ const HeroSection = ({ data }) => {
             <div className="absolute hidden lg:block right-[10%] top-[12%] h-[66%] w-[32%] rounded-t-[18rem] border border-oxxy-gold/60 bg-oxxy-white/10" />
 
             <div className="relative z-10 h-full flex flex-col justify-center px-8 sm:px-12 lg:px-20 xl:px-28">
-                <div className="max-w-2xl">
-                    <div data-animate className="mb-7 flex items-center gap-3 text-oxxy-gold">
+                <div className="max-w-2xl hero-entrance">
+                    <div className="mb-7 flex items-center gap-3 text-oxxy-gold">
                         <span className="grid h-9 w-9 place-items-center rounded-full border border-current font-serif text-lg">O</span>
                         <span className="text-[10px] font-semibold tracking-[0.32em] uppercase">The OXXY Edit</span>
                     </div>
-                    <p data-animate className="text-xs sm:text-sm font-semibold tracking-[0.35em] uppercase text-oxxy-black/70 mb-4">
+                    <p className="text-xs sm:text-sm font-semibold tracking-[0.35em] uppercase text-oxxy-black/70 mb-4">
                         {data?.heroSubtitle || 'Elevate Your Style'}
                     </p>
 
-                    <h1 data-animate className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-serif text-oxxy-black leading-[0.95]">
+                    <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-serif text-oxxy-black leading-[0.95]">
                         {(data?.heroHeading || 'Elegance')}{' '}
                         <span className="text-oxxy-gold italic font-light">&amp;</span>
                         <br />
                         {'Redefined'}
                     </h1>
 
-                    <p data-animate className="mt-6 text-xl md:text-2xl font-editorial text-oxxy-black/70 max-w-md leading-relaxed">
+                    <p className="mt-6 text-xl md:text-2xl font-editorial text-oxxy-black/70 max-w-md leading-relaxed">
                         Timeless fashion crafted for the modern woman.
                     </p>
 
-                    <div data-animate className="mt-8">
+                    <div className="mt-8">
                         <Link
                             to={data?.heroCTALink || '/collections'}
                             className="inline-block px-8 py-4 bg-oxxy-black text-oxxy-white text-[11px] font-semibold tracking-[0.2em] uppercase hover:bg-oxxy-gold transition-colors"
@@ -87,7 +78,7 @@ const HeroSection = ({ data }) => {
             <div className="absolute bottom-0 left-0 right-0 z-10 border-t border-white/35 bg-[#1a1a1a]/75 backdrop-blur-md">
                 <div className="max-w-7xl mx-auto px-8 py-5 flex items-center justify-center gap-12 sm:gap-20">
                     {features.map((feat, i) => (
-                        <div key={i} data-animate className="flex flex-col items-center gap-2 text-center">
+                        <div key={i} className="flex flex-col items-center gap-2 text-center">
                             <feat.icon className="h-5 w-5 text-oxxy-white/70" strokeWidth={1.5} />
                             <span className="text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase text-oxxy-white/80 whitespace-pre-line leading-tight">
                                 {feat.label}

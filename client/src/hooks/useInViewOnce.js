@@ -1,40 +1,34 @@
 import { useEffect, useRef, useState } from 'react';
 
-const ScrollReveal = ({ children, className = '', delay = 0 }) => {
+// Returns [ref, inView]: inView flips true once the element scrolls near the
+// viewport. Used to defer below-fold API fetches until the user scrolls down.
+const useInViewOnce = (rootMargin = '400px 0px') => {
     const ref = useRef(null);
-    const [visible, setVisible] = useState(false);
+    const [inView, setInView] = useState(false);
 
     useEffect(() => {
         const el = ref.current;
         if (!el) return;
         if (typeof IntersectionObserver === 'undefined') {
-            setVisible(true);
+            setInView(true);
             return;
         }
         const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
                     if (entry.isIntersecting) {
-                        setVisible(true);
+                        setInView(true);
                         observer.disconnect();
                     }
                 });
             },
-            { rootMargin: '0px 0px -8% 0px', threshold: 0.05 }
+            { rootMargin, threshold: 0 }
         );
         observer.observe(el);
         return () => observer.disconnect();
-    }, []);
+    }, [rootMargin]);
 
-    return (
-        <div
-            ref={ref}
-            className={`reveal ${visible ? 'is-visible' : ''} ${className}`}
-            style={delay ? { transitionDelay: `${delay}s` } : undefined}
-        >
-            {children}
-        </div>
-    );
+    return [ref, inView];
 };
 
-export default ScrollReveal;
+export default useInViewOnce;

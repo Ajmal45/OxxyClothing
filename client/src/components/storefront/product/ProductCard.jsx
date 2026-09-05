@@ -1,12 +1,14 @@
 import { useState, memo } from 'react';
 import { Link } from 'react-router-dom';
-import { MessageCircle, Eye } from 'lucide-react';
+import { MessageCircle } from 'lucide-react';
 import { getWhatsAppUrl, sendWhatsAppEvent } from '../../../utils/whatsapp';
+import { optimizeImageUrl } from '../../../utils/image';
 
 const ProductCard = memo(({ product }) => {
     const [imgError, setImgError] = useState(false);
-    const primaryImage = product?.images?.[0]?.url;
-    const hoverImage = product?.images?.[1]?.url;
+    const [hovered, setHovered] = useState(false);
+    const primaryImage = product?.images?.[0]?.url ? optimizeImageUrl(product.images[0].url, 600) : null;
+    const hoverImage = product?.images?.[1]?.url ? optimizeImageUrl(product.images[1].url, 600) : null;
     const hasStock = product?.variants?.some((v) => v.isActive && v.stock > 0);
     const availableSizes = product?.variants
         ?.filter((v) => v.isActive && v.stock > 0)
@@ -25,6 +27,7 @@ const ProductCard = memo(({ product }) => {
         <Link
             to={`/product/${product.slug}`}
             className="group block"
+            onMouseEnter={() => setHovered(true)}
         >
             <div className="relative aspect-[3/4] bg-gray-50 overflow-hidden">
                 {primaryImage && !imgError ? (
@@ -32,16 +35,25 @@ const ProductCard = memo(({ product }) => {
                         <img
                             src={primaryImage}
                             alt={product.images?.[0]?.altText || product.name}
+                            width="600"
+                            height="800"
+                            sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                             className="w-full h-full object-cover transition-all duration-700 group-hover:opacity-0 group-hover:scale-105"
                             loading="lazy"
+                            decoding="async"
                             onError={() => setImgError(true)}
                         />
-                        {hoverImage && (
+                        {hovered && hoverImage && (
                             <img
                                 src={hoverImage}
-                                alt={product.name}
+                                alt=""
+                                aria-hidden="true"
+                                width="600"
+                                height="800"
+                                sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                                 className="absolute inset-0 w-full h-full object-cover opacity-0 transition-all duration-700 group-hover:opacity-100 group-hover:scale-105"
                                 loading="lazy"
+                                decoding="async"
                             />
                         )}
                     </>
