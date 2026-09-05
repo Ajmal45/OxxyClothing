@@ -15,7 +15,7 @@ const HeroSection = ({ data }) => {
     ];
 
     return (
-        <section className="relative min-h-[760px] h-screen w-full overflow-hidden bg-oxxy-light">
+        <section className="relative min-h-[620px] sm:min-h-[760px] h-[100svh] w-full overflow-hidden bg-oxxy-light">
             {isVideo ? (
                 <video
                     autoPlay
@@ -30,7 +30,9 @@ const HeroSection = ({ data }) => {
                 </video>
             ) : (
                 <img
-                    src={optimizeImageUrl(heroSrc, 1600)}
+                    src={optimizeImageUrl(heroSrc, 1200)}
+                    srcSet={`${optimizeImageUrl(heroSrc, 800)} 800w, ${optimizeImageUrl(heroSrc, 1200)} 1200w, ${optimizeImageUrl(heroSrc, 1600)} 1600w`}
+                    sizes="100vw"
                     alt=""
                     aria-hidden="true"
                     fetchpriority="high"
@@ -75,7 +77,7 @@ const HeroSection = ({ data }) => {
                 </div>
             </div>
 
-            <div className="absolute bottom-0 left-0 right-0 z-10 border-t border-white/35 bg-[#1a1a1a]/75 backdrop-blur-md">
+            <div className="absolute bottom-0 left-0 right-0 z-10 border-t border-white/35 bg-[#1a1a1a]/90 sm:bg-[#1a1a1a]/75 sm:backdrop-blur-md">
                 <div className="max-w-7xl mx-auto px-8 py-5 flex items-center justify-center gap-12 sm:gap-20">
                     {features.map((feat, i) => (
                         <div key={i} className="flex flex-col items-center gap-2 text-center">

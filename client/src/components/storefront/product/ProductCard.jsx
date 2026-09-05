@@ -34,6 +34,7 @@ const ProductCard = memo(({ product }) => {
                     <>
                         <img
                             src={primaryImage}
+                            srcSet={`${optimizeImageUrl(product.images[0].url, 400)} 400w, ${primaryImage} 600w`}
                             alt={product.images?.[0]?.altText || product.name}
                             width="600"
                             height="800"
