@@ -16,7 +16,11 @@ const getWhatsAppNumber = async () => {
 
 export const getWhatsAppUrl = async ({ product, size, color }) => {
     const number = await getWhatsAppNumber();
-    const currentUrl = window.location.href;
+    // Always link the exact product page — never the listing page the
+    // customer happened to tap "enquire" from (card, collection, home).
+    const productUrl = product?.slug
+        ? `${window.location.origin}/product/${product.slug}`
+        : window.location.href;
 
     const parts = ['Hi OXXY,', '', "I'm interested in this product.", ''];
 
@@ -29,7 +33,7 @@ export const getWhatsAppUrl = async ({ product, size, color }) => {
     if (color) parts.push(`Selected Color: ${color}`);
 
     parts.push('');
-    parts.push(`Product Link: ${currentUrl}`);
+    parts.push(`Product Link: ${productUrl}`);
     parts.push('');
     parts.push('Is this product currently available?');
 
@@ -48,8 +52,7 @@ export const sendWhatsAppEvent = ({ productId, collectionId, size, color, source
     if (collectionId) payload.collectionId = collectionId;
 
     try {
-        const baseUrl = import.meta.env.VITE_API_URL || '/api';
-        navigator.sendBeacon?.(`${baseUrl}/analytics/events`, JSON.stringify(payload));
+        navigator.sendBeacon?.('/api/analytics/events', JSON.stringify(payload));
     } catch {
         // non-blocking
     }
