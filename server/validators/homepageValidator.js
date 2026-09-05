@@ -8,8 +8,9 @@ const mediaSchema = joi.object({
 
 const imageSchema = joi.object({
     url: joi.string().required(),
-    publicId: joi.string().required()
-});
+    publicId: joi.string().required(),
+    type: joi.string().valid('image', 'video').optional()
+}).unknown(true);
 
 export const updateHomepageSchema = joi.object({
     heroHeading: joi.string().allow('', null).trim(),
