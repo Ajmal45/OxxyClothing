@@ -49,6 +49,13 @@ const CollectionDetailPage = () => {
             });
 
             injectJsonLd(getCollectionSchema(collection));
+
+            storefrontService.recordEvent({
+                eventType: 'collection_view',
+                collectionId: collection._id,
+                source: document.referrer ? 'referral' : 'direct',
+                referrer: document.referrer || undefined,
+            }).catch(() => {});
         }
     }, [collection]);
 

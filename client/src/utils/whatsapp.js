@@ -52,7 +52,20 @@ export const sendWhatsAppEvent = ({ productId, collectionId, size, color, source
     if (collectionId) payload.collectionId = collectionId;
 
     try {
-        navigator.sendBeacon?.('/api/analytics/events', JSON.stringify(payload));
+        // Blob with JSON type so express.json() parses it (plain strings
+        // arrive as text/plain and get rejected by validation).
+        const blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
+        if (navigator.sendBeacon) {
+            const queued = navigator.sendBeacon('/api/analytics/events', blob);
+            if (queued) return;
+        }
+        // Fallback: fire-and-forget POST
+        fetch('/api/analytics/events', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+            keepalive: true,
+        }).catch(() => {});
     } catch {
         // non-blocking
     }

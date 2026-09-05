@@ -11,6 +11,12 @@ import { ANALYTICS_EVENTS } from '../utils/constants.js';
 // @route   POST /api/analytics/events
 // @access  Public
 export const recordEvent = asyncHandler(async (req, res) => {
+    // Tolerate beacons arriving as text/plain (older cached clients)
+    let body = req.body;
+    if (typeof body === 'string') {
+        try { body = JSON.parse(body); } catch { body = {}; }
+    }
+
     const schema = joi.object({
         eventType: joi.string().valid(...Object.values(ANALYTICS_EVENTS)).required(),
         productId: joi.string().hex().length(24).optional(),
@@ -21,7 +27,7 @@ export const recordEvent = asyncHandler(async (req, res) => {
         referrer: joi.string().optional()
     });
 
-    const { error, value } = schema.validate(req.body);
+    const { error, value } = schema.validate(body);
     if (error) {
         throw new ApiError(400, error.details[0].message);
     }
