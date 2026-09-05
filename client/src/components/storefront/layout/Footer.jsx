@@ -3,9 +3,11 @@ import { Link } from 'react-router-dom';
 import { MessageCircle, Mail, Phone, MapPin } from 'lucide-react';
 import { InstagramIcon } from '../../../utils/icons';
 import useWhatsAppNumber from '../../../hooks/useWhatsAppNumber';
+import { usePublicSettings } from '../../../hooks/useStorefrontData';
 
 const Footer = memo(() => {
     const { url: whatsappUrl } = useWhatsAppNumber();
+    const { data: settings } = usePublicSettings();
     return (
         <footer aria-label="Site footer" className="bg-oxxy-black text-oxxy-white">
             <div className="max-w-7xl mx-auto px-5 lg:px-8 py-16 lg:py-24">
@@ -28,7 +30,7 @@ const Footer = memo(() => {
                                 <MessageCircle className="h-4 w-4" />
                             </a>
                             <a
-                                href="https://instagram.com"
+                                href={settings?.instagramUrl || 'https://instagram.com'}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="p-2 border border-oxxy-overlay hover:bg-oxxy-overlay transition-colors"
@@ -83,24 +85,39 @@ const Footer = memo(() => {
                                     className="flex items-center gap-2 text-sm text-oxxy-muted hover:text-oxxy-white transition-colors"
                                 >
                                     <MessageCircle className="h-3.5 w-3.5 flex-shrink-0" />
-                                    WhatsApp
+                                    WhatsApp {settings?.whatsappNumber ? `· ${settings.whatsappNumber}` : ''}
                                 </a>
                             </li>
-                            <li>
-                                <a
-                                    href="mailto:hello@oxxy.in"
-                                    className="flex items-center gap-2 text-sm text-oxxy-muted hover:text-oxxy-white transition-colors"
-                                >
-                                    <Mail className="h-3.5 w-3.5 flex-shrink-0" />
-                                    hello@oxxy.in
-                                </a>
-                            </li>
-                            <li>
-                                <span className="flex items-center gap-2 text-sm text-oxxy-muted">
-                                    <Phone className="h-3.5 w-3.5 flex-shrink-0" />
-                                    +91 00000 00000
-                                </span>
-                            </li>
+                            {settings?.storeEmail && (
+                                <li>
+                                    <a
+                                        href={`mailto:${settings.storeEmail}`}
+                                        className="flex items-center gap-2 text-sm text-oxxy-muted hover:text-oxxy-white transition-colors"
+                                    >
+                                        <Mail className="h-3.5 w-3.5 flex-shrink-0" />
+                                        {settings.storeEmail}
+                                    </a>
+                                </li>
+                            )}
+                            {settings?.storePhone && (
+                                <li>
+                                    <a
+                                        href={`tel:${settings.storePhone.replace(/[^0-9+]/g, '')}`}
+                                        className="flex items-center gap-2 text-sm text-oxxy-muted hover:text-oxxy-white transition-colors"
+                                    >
+                                        <Phone className="h-3.5 w-3.5 flex-shrink-0" />
+                                        {settings.storePhone}
+                                    </a>
+                                </li>
+                            )}
+                            {settings?.storeAddress && (
+                                <li>
+                                    <span className="flex items-start gap-2 text-sm text-oxxy-muted">
+                                        <MapPin className="h-3.5 w-3.5 flex-shrink-0 mt-0.5" />
+                                        <span>{settings.storeAddress}</span>
+                                    </span>
+                                </li>
+                            )}
                         </ul>
                     </div>
                 </div>
