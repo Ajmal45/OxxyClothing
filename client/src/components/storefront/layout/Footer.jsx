@@ -15,7 +15,7 @@ const Footer = memo(() => {
                     <div>
                         <Link to="/" className="inline-flex items-center gap-2.5">
                             <img src="/oxxy-logo.jpeg" alt="OXXY" className="h-10 w-10 object-contain" />
-                            <span className="text-lg font-bold tracking-[0.25em]">OXXY</span>
+                            <span className="text-lg font-bold tracking-[0.25em] font-serif">OXXY</span>
                         </Link>
                         <p className="mt-4 text-sm text-oxxy-muted leading-relaxed max-w-xs">
                             Premium fashion for the modern woman.
