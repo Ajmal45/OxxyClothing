@@ -22,7 +22,7 @@ const analyticsLimiter = rateLimit({
 });
 
 // Public Route
-router.post('/events', analyticsLimiter, recordEvent);
+router.post('/analytics/events', analyticsLimiter, recordEvent);
 
 // Admin Routes
 router.get('/admin/analytics/overview', protect, getAnalyticsOverview);
