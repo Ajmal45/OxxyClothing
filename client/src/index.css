@@ -20,7 +20,7 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  a, button {
+  a {
     touch-action: manipulation;
   }
 

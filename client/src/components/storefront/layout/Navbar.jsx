@@ -1,8 +1,7 @@
-import { useState, useEffect, lazy, Suspense } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, Search } from 'lucide-react';
-
-const MobileMenu = lazy(() => import('./MobileMenu'));
+import MobileMenu from './MobileMenu';
 
 const NAV_ITEMS = [
     { label: 'Home', path: '/' },
@@ -62,9 +61,7 @@ const Navbar = ({ isHome }) => {
             </nav>
 
             {mobileOpen && (
-                <Suspense fallback={null}>
-                    <MobileMenu open={mobileOpen} onClose={() => setMobileOpen(false)} />
-                </Suspense>
+                <MobileMenu open={mobileOpen} onClose={() => setMobileOpen(false)} />
             )}
         </>
     );
