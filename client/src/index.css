@@ -20,6 +20,10 @@
     -webkit-tap-highlight-color: transparent;
   }
 
+  a, button {
+    touch-action: manipulation;
+  }
+
   html {
     scroll-behavior: smooth;
   }
