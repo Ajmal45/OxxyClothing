@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -11,15 +11,8 @@ import {
 import ImageUploader from '../../components/ImageUploader';
 import VariantEditor from '../../components/VariantEditor';
 
-const slugify = (str) =>
-    str.toLowerCase().trim()
-        .replace(/[^a-z0-9\s-]/g, '')
-        .replace(/\s+/g, '-')
-        .replace(/-+/g, '-');
-
 const productSchema = z.object({
     name: z.string().min(1, 'Product name is required').trim(),
-    slug: z.string().min(1, 'Slug is required').trim(),
     productCode: z.string().min(1, 'Product code is required').trim(),
     description: z.string().min(1, 'Description is required').trim(),
     price: z.coerce.number({ invalid_type_error: 'Price must be a number' }).min(0, 'Price must be 0 or more'),
@@ -51,20 +44,9 @@ const ProductFormPage = () => {
         formState: { errors, isSubmitting }
     } = useForm({
         resolver: zodResolver(productSchema),
-        defaultValues: { name: '', slug: '', productCode: '', description: '', price: 0, category: '', displayOrder: 0, isFeatured: false, isNewArrival: false, seoTitle: '', seoDescription: '' }
+        defaultValues: { name: '', productCode: '', description: '', price: 0, category: '', displayOrder: 0, isFeatured: false, isNewArrival: false, seoTitle: '', seoDescription: '' }
     });
 
-    const watchedName = watch('name');
-
-    // Auto-generate slug from name (only when not editing or slug hasn't been manually set)
-    const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
-    useEffect(() => {
-        if (!isEditing && !slugManuallyEdited && watchedName) {
-            setValue('slug', slugify(watchedName));
-        }
-    }, [watchedName, isEditing, slugManuallyEdited, setValue]);
-
-    // Load categories/collections
     useEffect(() => {
         const load = async () => {
             try {
@@ -76,7 +58,6 @@ const ProductFormPage = () => {
         load();
     }, []);
 
-    // Load product data for editing
     useEffect(() => {
         if (!isEditing) return;
         const load = async () => {
@@ -86,7 +67,6 @@ const ProductFormPage = () => {
                 const p = res.data.data;
                 reset({
                     name: p.name,
-                    slug: p.slug,
                     productCode: p.productCode,
                     description: p.description,
                     price: p.price,
@@ -100,7 +80,6 @@ const ProductFormPage = () => {
                 setImages(p.images || []);
                 setVariants(p.variants || []);
                 setSelectedCollections((p.collections || []).map((c) => c._id || c));
-                setSlugManuallyEdited(true);
             } catch {
                 setLoadError('Failed to load product. It may have been deleted.');
             } finally {
@@ -135,7 +114,8 @@ const ProductFormPage = () => {
             }
             setIsDirty(false);
         } catch (err) {
-            toast({ message: err?.response?.data?.message || 'Save failed. Check all fields.', type: 'error' });
+            const msg = err?.response?.data?.message || 'Save failed. Please check all fields and try again.';
+            toast({ message: msg, type: 'error' });
         }
     };
 
@@ -156,7 +136,6 @@ const ProductFormPage = () => {
 
             <form onSubmit={handleSubmit(onSubmit, () => toast({ message: 'Please fix form errors before saving.', type: 'error' }))} onChange={() => setIsDirty(true)} className="space-y-5">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-                    {/* Left Column */}
                     <div className="lg:col-span-2 space-y-5">
                         <FormSection title="Basic Information" description="Core product details visible to customers">
                             <div className="space-y-4">
@@ -164,20 +143,9 @@ const ProductFormPage = () => {
                                     <label className="block text-sm font-medium text-gray-700 mb-1.5">Product Name <span className="text-red-500">*</span></label>
                                     <Input placeholder="e.g. Floral Maxi Dress" error={errors.name?.message} {...register('name')} />
                                 </div>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1.5">Slug <span className="text-red-500">*</span></label>
-                                        <Input
-                                            placeholder="floral-maxi-dress"
-                                            error={errors.slug?.message}
-                                            {...register('slug')}
-                                            onFocus={() => setSlugManuallyEdited(true)}
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1.5">Product Code <span className="text-red-500">*</span></label>
-                                        <Input placeholder="DRESS-001" error={errors.productCode?.message} {...register('productCode')} />
-                                    </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Product Code <span className="text-red-500">*</span></label>
+                                    <Input placeholder="e.g. DRESS-001" error={errors.productCode?.message} {...register('productCode')} />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1.5">Description <span className="text-red-500">*</span></label>
@@ -218,7 +186,6 @@ const ProductFormPage = () => {
                         </FormSection>
                     </div>
 
-                    {/* Right Column */}
                     <div className="space-y-5">
                         <FormSection title="Category & Collections">
                             <div className="space-y-4">
@@ -266,7 +233,6 @@ const ProductFormPage = () => {
                             </div>
                         </FormSection>
 
-                        {/* Unsaved warning */}
                         {isDirty && (
                             <div className="flex items-start gap-2 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
                                 <AlertTriangle className="h-4 w-4 text-yellow-500 flex-shrink-0 mt-0.5" />

@@ -93,17 +93,23 @@ export const getAdminProductById = asyncHandler(async (req, res) => {
 export const createProduct = asyncHandler(async (req, res) => {
     const { name, productCode } = req.body;
 
-    const codeExists = await Product.findOne({ productCode, isDeleted: false });
+    if (!name || !name.trim()) {
+        throw new ApiError(400, 'Product name is required');
+    }
+    if (!productCode || !productCode.trim()) {
+        throw new ApiError(400, 'Product code is required');
+    }
+
+    const codeExists = await Product.findOne({ productCode: productCode.trim(), isDeleted: false });
     if (codeExists) {
-        throw new ApiError(400, 'Product code already exists');
+        throw new ApiError(400, `Product code "${productCode}" already exists. Please use a different code.`);
     }
 
     const slug = slugify(name, { lower: true, strict: true });
 
-    // Validate duplicate slug
     const slugExists = await Product.findOne({ slug, isDeleted: false });
     if (slugExists) {
-        throw new ApiError(400, 'Product with this name results in a duplicate slug. Please use a unique name.');
+        throw new ApiError(400, `A product with a similar name already exists. Please use a more unique product name.`);
     }
 
     const product = await Product.create({
@@ -128,7 +134,7 @@ export const updateProduct = asyncHandler(async (req, res) => {
     if (productCode && productCode !== product.productCode) {
         const codeExists = await Product.findOne({ productCode, isDeleted: false, _id: { $ne: product._id } });
         if (codeExists) {
-            throw new ApiError(400, 'Product code already exists');
+            throw new ApiError(400, `Product code "${productCode}" already exists. Please use a different code.`);
         }
     }
 
@@ -136,13 +142,9 @@ export const updateProduct = asyncHandler(async (req, res) => {
         req.body.slug = slugify(name, { lower: true, strict: true });
         const slugExists = await Product.findOne({ slug: req.body.slug, isDeleted: false, _id: { $ne: product._id } });
         if (slugExists) {
-            throw new ApiError(400, 'Product name results in a duplicate slug');
+            throw new ApiError(400, `A product with a similar name already exists. Please use a more unique product name.`);
         }
     }
-
-    // Availability is automatically handled by the pre-save hook in the model 
-    // when variants are updated. But since findByIdAndUpdate doesn't trigger pre-save hooks
-    // by default for some updates, we fetch, update, and save.
 
     Object.assign(product, req.body);
     const updatedProduct = await product.save();
