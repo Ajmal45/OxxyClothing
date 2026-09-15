@@ -25,9 +25,7 @@ const Loader = ({ isLoading }) => {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
                     >
-                        <span className="text-4xl md:text-5xl font-serif text-oxxy-black tracking-widest">
-                            OXXY
-                        </span>
+                        <img src="/oxxy-logo.jpeg" alt="OXXY" className="h-16 w-16 md:h-20 md:w-20 object-contain" />
                     </motion.div>
 
                     <motion.div

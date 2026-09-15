@@ -13,8 +13,8 @@ const Footer = memo(() => {
             <div className="max-w-7xl mx-auto px-5 lg:px-8 py-16 lg:py-24">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16">
                     <div>
-                        <Link to="/" className="text-2xl font-bold tracking-widest font-serif">
-                            OXXY
+                        <Link to="/" className="inline-block">
+                            <img src="/oxxy-logo.jpeg" alt="OXXY" className="h-10 w-10 object-contain" />
                         </Link>
                         <p className="mt-4 text-sm text-oxxy-muted leading-relaxed max-w-xs">
                             Complete Women Store. Premium fashion for the modern woman.

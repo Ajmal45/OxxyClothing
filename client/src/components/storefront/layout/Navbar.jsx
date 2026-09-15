@@ -40,7 +40,7 @@ const Navbar = ({ isHome }) => {
                 <div className="max-w-7xl mx-auto px-5 lg:px-8">
                     <div className="flex items-center justify-between h-[72px] lg:h-20">
                         <Link to="/" className="flex items-center gap-2.5">
-                            <span className="text-xl lg:text-2xl font-bold tracking-[0.25em] font-serif text-oxxy-black">OXXY</span>
+                            <img src="/oxxy-logo.jpeg" alt="OXXY" className="h-8 w-8 lg:h-10 lg:w-10 object-contain" />
                             <span className="hidden sm:block text-[9px] tracking-[0.15em] uppercase text-oxxy-muted">Complete Women's Store</span>
                         </Link>
 
