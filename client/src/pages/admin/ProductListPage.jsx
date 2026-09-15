@@ -126,9 +126,9 @@ const ProductListPage = () => {
             />
 
             {/* Filters */}
-            <div className="bg-white rounded-xl border border-gray-200 p-4 mb-5 space-y-3">
-                <div className="flex flex-col sm:flex-row gap-3">
-                    <div className="flex-1 relative">
+            <div className="bg-white rounded-xl border border-gray-200 p-4 mb-5">
+                <div className="flex flex-col lg:flex-row lg:items-center gap-3">
+                    <div className="flex-1 relative min-w-0">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
                         <input
                             type="search"
@@ -138,42 +138,42 @@ const ProductListPage = () => {
                             className="h-10 w-full pl-9 pr-3 rounded-md border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-black"
                         />
                     </div>
-                    <Select value={sort} onChange={(e) => updateParams({ sort: e.target.value })} className="w-full sm:w-44">
-                        <option value="newest">Newest First</option>
-                        <option value="oldest">Oldest First</option>
-                        <option value="price_asc">Price: Low to High</option>
-                        <option value="price_desc">Price: High to Low</option>
-                        <option value="name">Name A-Z</option>
-                        <option value="display_order">Display Order</option>
-                    </Select>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                    <Select value={category} onChange={(e) => updateParams({ category: e.target.value })} className="w-full sm:w-40">
-                        <option value="">All Categories</option>
-                        {categories.map((c) => <option key={c._id} value={c.slug}>{c.name}</option>)}
-                    </Select>
-                    <Select value={collection} onChange={(e) => updateParams({ collection: e.target.value })} className="w-full sm:w-44">
-                        <option value="">All Collections</option>
-                        {collections.map((c) => <option key={c._id} value={c.slug}>{c.name}</option>)}
-                    </Select>
-                    <Select value={isAvailable} onChange={(e) => updateParams({ isAvailable: e.target.value })} className="w-full sm:w-36">
-                        <option value="">Availability</option>
-                        <option value="true">Available</option>
-                        <option value="false">Unavailable</option>
-                    </Select>
-                    <Select value={isFeatured} onChange={(e) => updateParams({ isFeatured: e.target.value })} className="w-full sm:w-32">
-                        <option value="">Featured</option>
-                        <option value="true">Featured Only</option>
-                    </Select>
-                    <Select value={isNewArrival} onChange={(e) => updateParams({ isNewArrival: e.target.value })} className="w-full sm:w-36">
-                        <option value="">New Arrivals</option>
-                        <option value="true">New Arrivals Only</option>
-                    </Select>
-                    {hasFilters && (
-                        <Button variant="ghost" size="sm" onClick={clearFilters} className="text-gray-500">
-                            <X className="h-3.5 w-3.5 mr-1" />Clear Filters
-                        </Button>
-                    )}
+                    <div className="flex flex-wrap items-center gap-2">
+                        <Select value={sort} onChange={(e) => updateParams({ sort: e.target.value })} className="w-full sm:w-40 lg:w-auto">
+                            <option value="newest">Newest First</option>
+                            <option value="oldest">Oldest First</option>
+                            <option value="price_asc">Price: Low to High</option>
+                            <option value="price_desc">Price: High to Low</option>
+                            <option value="name">Name A-Z</option>
+                            <option value="display_order">Display Order</option>
+                        </Select>
+                        <Select value={category} onChange={(e) => updateParams({ category: e.target.value })} className="w-full sm:w-40 lg:w-auto">
+                            <option value="">All Categories</option>
+                            {categories.map((c) => <option key={c._id} value={c.slug}>{c.name}</option>)}
+                        </Select>
+                        <Select value={collection} onChange={(e) => updateParams({ collection: e.target.value })} className="w-full sm:w-44 lg:w-auto">
+                            <option value="">All Collections</option>
+                            {collections.map((c) => <option key={c._id} value={c.slug}>{c.name}</option>)}
+                        </Select>
+                        <Select value={isAvailable} onChange={(e) => updateParams({ isAvailable: e.target.value })} className="w-full sm:w-36 lg:w-auto">
+                            <option value="">Availability</option>
+                            <option value="true">Available</option>
+                            <option value="false">Unavailable</option>
+                        </Select>
+                        <Select value={isFeatured} onChange={(e) => updateParams({ isFeatured: e.target.value })} className="w-full sm:w-32 lg:w-auto">
+                            <option value="">Featured</option>
+                            <option value="true">Featured Only</option>
+                        </Select>
+                        <Select value={isNewArrival} onChange={(e) => updateParams({ isNewArrival: e.target.value })} className="w-full sm:w-36 lg:w-auto">
+                            <option value="">New Arrivals</option>
+                            <option value="true">New Arrivals Only</option>
+                        </Select>
+                        {hasFilters && (
+                            <Button variant="ghost" size="sm" onClick={clearFilters} className="text-gray-500 whitespace-nowrap">
+                                <X className="h-3.5 w-3.5 mr-1" />Clear
+                            </Button>
+                        )}
+                    </div>
                 </div>
             </div>
 
