@@ -14,7 +14,7 @@ const Footer = memo(() => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16">
                     <div>
                         <Link to="/" className="inline-flex items-center gap-2.5">
-                            <img src="/oxxy-logo.jpeg" alt="OXXY" className="h-10 w-10 object-contain" />
+                            <img src="/oxxy-logo.jpeg" alt="OXXY" className="h-10 w-10 object-contain rounded-full" />
                             <span className="text-lg font-bold tracking-[0.25em] font-serif">OXXY</span>
                         </Link>
                         <p className="mt-4 text-sm text-oxxy-muted leading-relaxed max-w-xs">
