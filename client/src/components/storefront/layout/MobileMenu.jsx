@@ -17,6 +17,7 @@ const MobileMenu = ({ open, onClose }) => {
     const location = useLocation();
     const menuRef = useRef(null);
     const { url: whatsappUrl } = useWhatsAppNumber();
+    const prevPath = useRef(location.pathname);
 
     useEffect(() => {
         if (open) {
@@ -32,8 +33,11 @@ const MobileMenu = ({ open, onClose }) => {
     }, [open]);
 
     useEffect(() => {
-        onClose();
-    }, [location.pathname]);
+        if (prevPath.current !== location.pathname) {
+            onClose();
+        }
+        prevPath.current = location.pathname;
+    }, [location.pathname, onClose]);
 
     useEffect(() => {
         if (!open) return;
