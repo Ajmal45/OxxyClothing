@@ -3,7 +3,7 @@ import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     LayoutDashboard, Package, FolderOpen, Grid3X3, Home,
-    Settings, MessageSquare, Trash2, Menu, X, LogOut, ChevronRight, User
+    Settings, Trash2, Menu, X, LogOut, ChevronRight, User
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../components/ui/Toast';
@@ -15,7 +15,6 @@ const navItems = [
     { to: '/admin/categories', icon: Grid3X3, label: 'Categories' },
     { to: '/admin/collections', icon: FolderOpen, label: 'Collections' },
     { to: '/admin/homepage', icon: Home, label: 'Homepage' },
-    { to: '/admin/enquiries', icon: MessageSquare, label: 'Enquiries' },
     { to: '/admin/settings', icon: Settings, label: 'Settings' },
     { to: '/admin/trash', icon: Trash2, label: 'Trash' },
 ];

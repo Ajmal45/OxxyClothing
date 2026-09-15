@@ -1,0 +1,18 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "opencode-zen": {
+      "npm": "@ai-sdk/openai",
+      "name": "OpenCode Zen",
+      "options": {
+        "baseURL": "https://opencode.ai/zen/v1"
+      },
+      "models": {
+        "gpt-6-astra": {
+          "name": "GPT-6 Astra"
+        }
+      }
+    }
+  },
+  "model": "opencode-zen/gpt-6-astra"
+}
