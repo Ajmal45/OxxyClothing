@@ -63,6 +63,13 @@ export const getAnalyticsOverview = asyncHandler(async (req, res) => {
     ]);
 
     const totalWhatsAppClicks = await AnalyticsEvent.countDocuments({ eventType: ANALYTICS_EVENTS.WHATSAPP_CLICK });
+
+    // WhatsApp clicks in last 7 days
+    const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    const recentWhatsAppClicks = await AnalyticsEvent.countDocuments({
+        eventType: ANALYTICS_EVENTS.WHATSAPP_CLICK,
+        createdAt: { $gte: sevenDaysAgo }
+    });
     const totalProductViews = await AnalyticsEvent.countDocuments({ eventType: ANALYTICS_EVENTS.PRODUCT_VIEW });
     const totalCollectionViews = await AnalyticsEvent.countDocuments({ eventType: ANALYTICS_EVENTS.COLLECTION_VIEW });
 
@@ -70,6 +77,7 @@ export const getAnalyticsOverview = asyncHandler(async (req, res) => {
         totalEvents,
         recentProductViews: recentViews,
         totalWhatsAppClicks,
+        recentWhatsAppClicks,
         totalProductViews,
         totalCollectionViews,
     }, 'Analytics overview fetched successfully'));
