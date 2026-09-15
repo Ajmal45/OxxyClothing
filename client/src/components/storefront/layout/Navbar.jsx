@@ -54,8 +54,8 @@ const Navbar = ({ isHome }) => {
                         </div>
 
                         <div className="flex items-center gap-2 sm:gap-4">
-                            <Link to="/collections" className="p-2 text-oxxy-black/70 transition-colors hover:text-oxxy-black" aria-label="Search products" style={{ touchAction: 'manipulation' }}><Search className="h-5 w-5" strokeWidth={1.5} /></Link>
-                            <button onClick={() => setMobileOpen(true)} className="lg:hidden p-2 text-oxxy-black" aria-label="Open menu" style={{ touchAction: 'manipulation' }}><Menu className="h-6 w-6" /></button>
+                            <Link to="/collections" className="p-2 text-oxxy-black/70 transition-colors hover:text-oxxy-black" aria-label="Search products"><Search className="h-5 w-5" strokeWidth={1.5} /></Link>
+                            <button onClick={() => setMobileOpen(true)} className="lg:hidden p-2 text-oxxy-black" aria-label="Open menu"><Menu className="h-6 w-6" /></button>
                         </div>
                     </div>
                 </div>
