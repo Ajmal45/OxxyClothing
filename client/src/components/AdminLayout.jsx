@@ -33,7 +33,7 @@ const SidebarContent = ({ onNavClick }) => {
     return (
         <div className="flex flex-col h-full bg-white border-r border-gray-200">
             <div className="flex items-center gap-3 px-5 py-5 border-b border-gray-100">
-                <img src="/oxxy-logo.jpeg" alt="OXXY" className="h-8 w-8 object-contain rounded-lg flex-shrink-0" />
+                <img src="/oxxy-logo1.png" alt="OXXY" className="h-8 w-8 object-contain rounded-lg flex-shrink-0" />
                 <div>
                     <p className="text-sm font-bold text-gray-900 leading-none">OXXY</p>
                     <p className="text-xs text-gray-400 mt-0.5">Admin Dashboard</p>
@@ -127,7 +127,7 @@ const AdminLayout = () => {
                     </button>
 
                     <div className="flex items-center gap-2 text-sm text-gray-500">
-                        <img src="/oxxy-logo.jpeg" alt="OXXY" className="h-5 w-5 object-contain" />
+                        <img src="/oxxy-logo1.png" alt="OXXY" className="h-5 w-5 object-contain" />
                         <ChevronRight className="h-3.5 w-3.5" />
                         <span className="font-medium text-gray-900">{pageTitle}</span>
                     </div>

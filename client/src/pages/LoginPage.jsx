@@ -39,7 +39,7 @@ const LoginPage = () => {
         <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
             <div className="w-full max-w-md animate-[fadeSlideUp_0.3s_ease-out]">
                 <div className="text-center mb-8">
-                    <img src="/oxxy-logo.jpeg" alt="OXXY" className="h-12 w-12 object-contain rounded-xl mb-4 mx-auto" />
+                    <img src="/oxxy-logo1.png" alt="OXXY" className="h-12 w-12 object-contain rounded-xl mb-4 mx-auto" />
                     <h1 className="text-2xl font-bold text-gray-900 tracking-tight">OXXY Admin</h1>
                     <p className="mt-1 text-sm text-gray-500">Sign in to manage your store</p>
                 </div>

@@ -25,7 +25,7 @@ const Loader = ({ isLoading }) => {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
                     >
-                        <img src="/oxxy-logo.jpeg" alt="OXXY" className="h-16 w-16 md:h-20 md:w-20 object-contain" />
+                        <img src="/oxxy-logo1.png" alt="OXXY" className="h-16 w-16 md:h-20 md:w-20 object-contain" />
                     </motion.div>
 
                     <motion.div
