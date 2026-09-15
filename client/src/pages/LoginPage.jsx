@@ -7,7 +7,6 @@ import { Eye, EyeOff, LogIn } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { Button, Input } from '../components/ui';
 import { useToast } from '../components/ui/Toast';
-import { motion } from 'framer-motion';
 
 const loginSchema = z.object({
     email: z.string().email('Enter a valid email address'),
@@ -38,13 +37,7 @@ const LoginPage = () => {
 
     return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
-                className="w-full max-w-md"
-            >
-                {/* Logo + Title */}
+            <div className="w-full max-w-md animate-[fadeSlideUp_0.3s_ease-out]">
                 <div className="text-center mb-8">
                     <div className="inline-flex items-center justify-center h-12 w-12 rounded-xl bg-black mb-4">
                         <span className="text-white font-bold text-lg tracking-widest">O</span>
@@ -53,8 +46,7 @@ const LoginPage = () => {
                     <p className="mt-1 text-sm text-gray-500">Sign in to manage your store</p>
                 </div>
 
-                {/* Card */}
-                <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-8">
+                <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 sm:p-8">
                     <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5">
                         <div>
                             <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1.5">
@@ -109,7 +101,7 @@ const LoginPage = () => {
                 <p className="text-center text-xs text-gray-400 mt-6">
                     OXXY — Complete Women Store &copy; {new Date().getFullYear()}
                 </p>
-            </motion.div>
+            </div>
         </div>
     );
 };

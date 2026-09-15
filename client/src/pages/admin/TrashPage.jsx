@@ -122,11 +122,17 @@ const TrashPage = () => {
                                         </td>
                                         <td className="px-4 py-3 text-right">
                                             <div className="flex items-center justify-end gap-2">
-                                                <Button variant="outline" size="sm" onClick={() => setRestoreTarget(p)}>
+                                                <Button variant="outline" size="sm" onClick={() => setRestoreTarget(p)} className="hidden sm:inline-flex">
                                                     <RotateCcw className="h-3.5 w-3.5 mr-1.5" />Restore
                                                 </Button>
-                                                <Button variant="danger" size="sm" onClick={() => setPermanentTarget(p)}>
+                                                <Button variant="danger" size="sm" onClick={() => setPermanentTarget(p)} className="hidden sm:inline-flex">
                                                     <Trash2 className="h-3.5 w-3.5 mr-1.5" />Delete Forever
+                                                </Button>
+                                                <Button variant="ghost" size="icon" onClick={() => setRestoreTarget(p)} className="sm:hidden" aria-label="Restore">
+                                                    <RotateCcw className="h-3.5 w-3.5" />
+                                                </Button>
+                                                <Button variant="ghost" size="icon" onClick={() => setPermanentTarget(p)} className="sm:hidden text-red-400 hover:text-red-600" aria-label="Delete forever">
+                                                    <Trash2 className="h-3.5 w-3.5" />
                                                 </Button>
                                             </div>
                                         </td>

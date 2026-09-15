@@ -155,16 +155,16 @@ const ProductFormPage = () => {
             />
 
             <form onSubmit={handleSubmit(onSubmit, () => toast({ message: 'Please fix form errors before saving.', type: 'error' }))} onChange={() => setIsDirty(true)} className="space-y-5">
-                <div className="grid grid-cols-1 xl:grid-cols-3 gap-5">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
                     {/* Left Column */}
-                    <div className="xl:col-span-2 space-y-5">
+                    <div className="lg:col-span-2 space-y-5">
                         <FormSection title="Basic Information" description="Core product details visible to customers">
                             <div className="space-y-4">
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1.5">Product Name <span className="text-red-500">*</span></label>
                                     <Input placeholder="e.g. Floral Maxi Dress" error={errors.name?.message} {...register('name')} />
                                 </div>
-                                <div className="grid grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1.5">Slug <span className="text-red-500">*</span></label>
                                         <Input
@@ -183,7 +183,7 @@ const ProductFormPage = () => {
                                     <label className="block text-sm font-medium text-gray-700 mb-1.5">Description <span className="text-red-500">*</span></label>
                                     <Textarea placeholder="Describe the product..." rows={5} error={errors.description?.message} {...register('description')} />
                                 </div>
-                                <div className="grid grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1.5">Price (₹) <span className="text-red-500">*</span></label>
                                         <Input type="number" min="0" step="0.01" placeholder="2500" error={errors.price?.message} {...register('price')} />

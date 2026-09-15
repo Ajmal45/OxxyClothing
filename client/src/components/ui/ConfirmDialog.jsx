@@ -20,11 +20,11 @@ const ConfirmDialog = ({
                 </div>
                 <p className="text-sm text-gray-600 pt-2">{message}</p>
             </div>
-            <div className="flex justify-end gap-3 mt-6">
-                <Button variant="outline" onClick={onClose} disabled={isLoading}>
+            <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 mt-6">
+                <Button variant="outline" onClick={onClose} disabled={isLoading} className="w-full sm:w-auto">
                     Cancel
                 </Button>
-                <Button variant={confirmVariant} onClick={onConfirm} isLoading={isLoading}>
+                <Button variant={confirmVariant} onClick={onConfirm} isLoading={isLoading} className="w-full sm:w-auto">
                     {confirmLabel}
                 </Button>
             </div>

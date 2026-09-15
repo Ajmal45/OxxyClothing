@@ -205,24 +205,22 @@ const EnquiriesPage = () => {
             )}
 
             {/* Raw Events */}
-            <div className="bg-white rounded-xl border border-gray-200 p-6">
-                <div className="flex items-center justify-between mb-4">
+            <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
                     <div className="flex items-center gap-2">
                         <TrendingUp className="h-4 w-4 text-gray-500" />
                         <h2 className="text-sm font-semibold text-gray-900">Recent Events</h2>
                     </div>
-                    <div className="flex items-center gap-2">
-                        <Select
-                            value={eventTypeFilter}
-                            onChange={(e) => setEventTypeFilter(e.target.value)}
-                            className="w-40"
-                        >
-                            <option value="">All Events</option>
-                            <option value="product_view">Product Views</option>
-                            <option value="collection_view">Collection Views</option>
-                            <option value="whatsapp_click">WhatsApp Clicks</option>
-                        </Select>
-                    </div>
+                    <Select
+                        value={eventTypeFilter}
+                        onChange={(e) => setEventTypeFilter(e.target.value)}
+                        className="w-full sm:w-40"
+                    >
+                        <option value="">All Events</option>
+                        <option value="product_view">Product Views</option>
+                        <option value="collection_view">Collection Views</option>
+                        <option value="whatsapp_click">WhatsApp Clicks</option>
+                    </Select>
                 </div>
                 {events.length === 0 ? (
                     <p className="text-sm text-gray-400 py-6 text-center">No events recorded yet.</p>

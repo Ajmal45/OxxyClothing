@@ -124,7 +124,7 @@ const CollectionFormModal = ({ isOpen, onClose, collection, onSuccess }) => {
                     <label className="block text-sm font-medium text-gray-700 mb-1.5">Description</label>
                     <Textarea placeholder="Optional description..." rows={3} {...register('description')} />
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1.5">Display Order</label>
                         <Input type="number" min="0" {...register('displayOrder')} />
@@ -179,9 +179,9 @@ const CollectionFormModal = ({ isOpen, onClose, collection, onSuccess }) => {
                         </div>
                     </div>
                 </div>
-                <div className="flex justify-end gap-3 pt-2 border-t border-gray-100">
-                    <Button variant="outline" type="button" onClick={onClose}>Cancel</Button>
-                    <Button type="submit" isLoading={isSubmitting}>
+                <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-2 border-t border-gray-100">
+                    <Button variant="outline" type="button" onClick={onClose} className="w-full sm:w-auto">Cancel</Button>
+                    <Button type="submit" isLoading={isSubmitting} className="w-full sm:w-auto">
                         {isEditing ? 'Save Changes' : 'Create Collection'}
                     </Button>
                 </div>

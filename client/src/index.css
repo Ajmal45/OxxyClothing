@@ -68,6 +68,20 @@
     to { opacity: 1; }
   }
 
+  /* Admin animations */
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes slideInLeft {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+  }
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
   ::selection {
     background-color: var(--color-oxxy-black);
     color: var(--color-oxxy-white);

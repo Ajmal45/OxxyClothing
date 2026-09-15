@@ -498,64 +498,66 @@ const VariantEditor = ({ variants, onChange, productPrice = 0 }) => {
             {/* Add New Color */}
             <div className="border border-dashed border-gray-200 rounded-lg p-4 space-y-3">
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Add Color Variant</p>
-                <div className="flex flex-wrap gap-2 items-end">
-                    <div>
+                <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-3 items-end">
+                    <div className="col-span-2 sm:col-span-1">
                         <label className="block text-xs text-gray-500 mb-1">Color Name <span className="text-red-500">*</span></label>
                         <Input
                             value={newColor.color}
                             onChange={(e) => { setAddError(''); setNewColor((p) => ({ ...p, color: e.target.value })); }}
                             placeholder="Black, Navy..."
-                            className="h-8 text-xs w-28"
+                            className="h-9 text-sm"
                         />
                     </div>
-                    <div>
+                    <div className="col-span-1">
                         <label className="block text-xs text-gray-500 mb-1">Code</label>
                         <div className="flex items-center gap-1">
                             <input
                                 type="color"
                                 value={newColor.colorCode}
                                 onChange={(e) => setNewColor((p) => ({ ...p, colorCode: e.target.value }))}
-                                className="w-8 h-8 rounded border border-gray-200 cursor-pointer flex-shrink-0"
+                                className="w-9 h-9 rounded border border-gray-200 cursor-pointer flex-shrink-0"
                             />
                             <Input
                                 value={newColor.colorCode}
                                 onChange={(e) => setNewColor((p) => ({ ...p, colorCode: e.target.value }))}
-                                className="h-8 text-xs w-20 font-mono"
+                                className="h-9 text-sm w-20 font-mono"
                             />
                         </div>
                     </div>
-                    <div>
+                    <div className="col-span-1">
                         <label className="block text-xs text-gray-500 mb-1">Size</label>
                         <Input
                             value={newColor.size}
                             onChange={(e) => setNewColor((p) => ({ ...p, size: e.target.value }))}
                             placeholder="Optional"
-                            className="h-8 text-xs w-20"
+                            className="h-9 text-sm"
                         />
                     </div>
-                    <div>
+                    <div className="col-span-1">
                         <label className="block text-xs text-gray-500 mb-1">Stock</label>
                         <Input
                             type="number"
                             min="0"
                             value={newColor.stock}
                             onChange={(e) => { setAddError(''); setNewColor((p) => ({ ...p, stock: Number(e.target.value) })); }}
-                            className="h-8 text-xs w-16"
+                            className="h-9 text-sm"
                         />
                     </div>
-                    <div>
+                    <div className="col-span-1">
                         <label className="block text-xs text-gray-500 mb-1">SKU</label>
                         <Input
                             value={newColor.sku}
                             onChange={(e) => setNewColor((p) => ({ ...p, sku: e.target.value }))}
                             placeholder="Optional"
-                            className="h-8 text-xs w-24"
+                            className="h-9 text-sm"
                         />
                     </div>
-                    <Button type="button" size="sm" onClick={handleAdd}>
-                        <Plus className="h-3.5 w-3.5 mr-1" />
-                        Add
-                    </Button>
+                    <div className="col-span-2 sm:col-span-1">
+                        <Button type="button" size="sm" onClick={handleAdd} className="w-full sm:w-auto">
+                            <Plus className="h-3.5 w-3.5 mr-1" />
+                            Add
+                        </Button>
+                    </div>
                 </div>
                 {addError && (
                     <div className="flex items-center gap-1.5 text-xs text-red-600">

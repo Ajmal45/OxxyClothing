@@ -160,9 +160,9 @@ const CategoryFormModal = ({ isOpen, onClose, category, onSuccess }) => {
                     checked={watch('isActive')}
                     onChange={(val) => setValue('isActive', val)}
                 />
-                <div className="flex justify-end gap-3 pt-2 border-t border-gray-100">
-                    <Button variant="outline" type="button" onClick={onClose}>Cancel</Button>
-                    <Button type="submit" isLoading={isSubmitting}>
+                <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-2 border-t border-gray-100">
+                    <Button variant="outline" type="button" onClick={onClose} className="w-full sm:w-auto">Cancel</Button>
+                    <Button type="submit" isLoading={isSubmitting} className="w-full sm:w-auto">
                         {isEditing ? 'Save Changes' : 'Create Category'}
                     </Button>
                 </div>

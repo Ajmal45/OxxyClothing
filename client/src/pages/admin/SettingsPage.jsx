@@ -137,12 +137,12 @@ const SettingsPage = () => {
                             </div>
                             <div className="space-y-2">
                                 {socialLinks.map((link, i) => (
-                                    <div key={i} className="flex gap-2 items-center">
+                                    <div key={i} className="flex flex-col sm:flex-row gap-2 items-stretch sm:items-center">
                                         <Input
                                             placeholder="Platform (e.g. Facebook)"
                                             value={link.platform}
                                             onChange={(e) => handleSocialLinkChange(i, 'platform', e.target.value)}
-                                            className="w-32"
+                                            className="w-full sm:w-32"
                                         />
                                         <Input
                                             placeholder="URL"
@@ -150,7 +150,7 @@ const SettingsPage = () => {
                                             onChange={(e) => handleSocialLinkChange(i, 'url', e.target.value)}
                                             className="flex-1"
                                         />
-                                        <Button type="button" variant="ghost" size="icon" onClick={() => handleRemoveSocialLink(i)} className="text-red-400 hover:text-red-600 flex-shrink-0">
+                                        <Button type="button" variant="ghost" size="icon" onClick={() => handleRemoveSocialLink(i)} className="text-red-400 hover:text-red-600 flex-shrink-0 self-end sm:self-center">
                                             <Trash2 className="h-3.5 w-3.5" />
                                         </Button>
                                     </div>
